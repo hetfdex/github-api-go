@@ -9,7 +9,7 @@ import (
 
 var mocking = false
 
-var mocks = make(map[string]*Mock)
+var mocks map[string]*Mock
 
 // Mock model
 type Mock struct {
@@ -27,6 +27,11 @@ func StartMocker() {
 // StopMocker disables client mocking
 func StopMocker() {
 	mocking = false
+}
+
+// FlushMocks creates a new map
+func FlushMocks() {
+	mocks = make(map[string]*Mock)
 }
 
 func getMockID(httpMethod string, url string) string {
