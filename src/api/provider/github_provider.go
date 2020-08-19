@@ -47,7 +47,7 @@ func CreateRepo(authorizationToken string, request model.GitHubCreateRepoRequest
 		if err != nil {
 			return nil, &model.GitHubErrorResponse{
 				StatusCode: http.StatusInternalServerError,
-				Message:    "Invalid JSON Error Response Body",
+				Message:    "Invalid Error Response Body JSON Parsing",
 			}
 		}
 		errResponse.StatusCode = response.StatusCode
