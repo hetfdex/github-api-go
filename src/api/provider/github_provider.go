@@ -2,9 +2,7 @@ package provider
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/hetfdex/github-api-go/src/api/client"
@@ -21,8 +19,6 @@ func CreateRepo(authorizationToken string, request model.GitHubCreateRepoRequest
 	response, err := client.Post(url, request, headers)
 
 	if err != nil {
-		log.Println(fmt.Sprintf("Github CreateRepo Request Error: %s", err.Error()))
-
 		return nil, &model.GitHubErrorResponse{
 			StatusCode: http.StatusInternalServerError,
 			Message:    err.Error(),
@@ -34,7 +30,7 @@ func CreateRepo(authorizationToken string, request model.GitHubCreateRepoRequest
 	if err != nil {
 		return nil, &model.GitHubErrorResponse{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Invalid Error Response Body",
+			Message:    "Invalid Response Body",
 		}
 	}
 	defer response.Body.Close()
@@ -47,7 +43,7 @@ func CreateRepo(authorizationToken string, request model.GitHubCreateRepoRequest
 		if err != nil {
 			return nil, &model.GitHubErrorResponse{
 				StatusCode: http.StatusInternalServerError,
-				Message:    "Invalid Error Response Body JSON Parsing",
+				Message:    "Invalid Error Response",
 			}
 		}
 		errResponse.StatusCode = response.StatusCode
@@ -59,11 +55,9 @@ func CreateRepo(authorizationToken string, request model.GitHubCreateRepoRequest
 	err = json.Unmarshal(bytes, &result)
 
 	if err != nil {
-		log.Println(fmt.Sprintf("Github CreateRepo Response Error: %s", err.Error()))
-
 		return nil, &model.GitHubErrorResponse{
 			StatusCode: http.StatusInternalServerError,
-			Message:    "Invalid JSON Success Response Body",
+			Message:    "Invalid Created Response",
 		}
 	}
 	return &result, nil
