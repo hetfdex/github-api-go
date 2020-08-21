@@ -145,3 +145,50 @@ func TestCreateRepoInvalidCreatedResponse(t *testing.T) {
 	assert.EqualValues(t, http.StatusInternalServerError, err.StatusCode)
 	assert.EqualValues(t, "Invalid Created Response", err.Message)
 }
+func TestCreateRepoValidCreatedResponse(t *testing.T) {
+	validCreatedResponse := ioutil.NopCloser(strings.NewReader(`{
+		"id": 0,
+		"name": "name",
+		"full_name": "full_name",
+		"owner": {
+			"login": "login",
+			"id": 0,
+			"url": "url",
+			"html_url": "html_url"
+			},
+		"permissions": {
+			"admin": true,
+			"push": true,
+			"pull": true
+			}
+		}`))
+
+	response := &http.Response{
+		StatusCode: http.StatusCreated,
+		Body:       validCreatedResponse,
+	}
+
+	mock := client.Mock{
+		URL:        "https://api.github.com/user/repos",
+		HTTPMethod: http.MethodPost,
+		Response:   response,
+	}
+	client.FlushMocks()
+
+	client.AddMock(mock)
+
+	res, err := CreateRepo("", model.GitHubCreateRepoRequest{})
+
+	assert.Nil(t, err)
+	assert.NotNil(t, res)
+	assert.EqualValues(t, 0, res.ID)
+	assert.EqualValues(t, "name", res.Name)
+	assert.EqualValues(t, "full_name", res.FullName)
+	assert.EqualValues(t, 0, res.Owner.ID)
+	assert.EqualValues(t, "login", res.Owner.Login)
+	assert.EqualValues(t, "url", res.Owner.URL)
+	assert.EqualValues(t, "html_url", res.Owner.HTMLURL)
+	assert.EqualValues(t, true, res.Permissions.Admin)
+	assert.EqualValues(t, true, res.Permissions.Push)
+	assert.EqualValues(t, true, res.Permissions.Pull)
+}
