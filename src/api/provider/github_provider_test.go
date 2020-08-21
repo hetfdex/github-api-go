@@ -2,8 +2,10 @@ package provider
 
 import (
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -60,4 +62,31 @@ func TestCreateRepoInvalidResponseBody(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.EqualValues(t, http.StatusInternalServerError, err.StatusCode)
 	assert.EqualValues(t, "Invalid Response Body", err.Message)
+}
+
+func TestCreateRepoInvalidErrorResponse(t *testing.T) {
+	invalidErrorResponse := ioutil.NopCloser(strings.NewReader(`{
+		"message": 0
+		}`))
+
+	response := &http.Response{
+		StatusCode: http.StatusUnauthorized,
+		Body:       invalidErrorResponse,
+	}
+
+	mock := client.Mock{
+		URL:        "https://api.github.com/user/repos",
+		HTTPMethod: http.MethodPost,
+		Response:   response,
+	}
+	client.FlushMocks()
+
+	client.AddMock(mock)
+
+	res, err := CreateRepo("", model.GitHubCreateRepoRequest{})
+
+	assert.Nil(t, res)
+	assert.NotNil(t, err)
+	assert.EqualValues(t, http.StatusInternalServerError, err.StatusCode)
+	assert.EqualValues(t, "Invalid Error Response", err.Message)
 }
