@@ -119,3 +119,29 @@ func TestCreateRepoValidErrorResponse(t *testing.T) {
 	assert.EqualValues(t, "message", err.Message)
 	assert.EqualValues(t, "documentation_url", err.DocumentationURL)
 }
+func TestCreateRepoInvalidCreatedResponse(t *testing.T) {
+	invalidCreatedResponse := ioutil.NopCloser(strings.NewReader(`{
+		"id": 0"
+		}`))
+
+	response := &http.Response{
+		StatusCode: http.StatusCreated,
+		Body:       invalidCreatedResponse,
+	}
+
+	mock := client.Mock{
+		URL:        "https://api.github.com/user/repos",
+		HTTPMethod: http.MethodPost,
+		Response:   response,
+	}
+	client.FlushMocks()
+
+	client.AddMock(mock)
+
+	res, err := CreateRepo("", model.GitHubCreateRepoRequest{})
+
+	assert.Nil(t, res)
+	assert.NotNil(t, err)
+	assert.EqualValues(t, http.StatusInternalServerError, err.StatusCode)
+	assert.EqualValues(t, "Invalid Created Response", err.Message)
+}
