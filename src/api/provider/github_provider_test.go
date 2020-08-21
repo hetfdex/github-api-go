@@ -17,7 +17,7 @@ func TestMain(m *testing.M) {
 
 	os.Exit(m.Run())
 }
-func TestCreateRepoInvalidClientResponse(t *testing.T) {
+func TestCreateRepoInvalidResponse(t *testing.T) {
 	message := "Invalid Client Response"
 
 	mock := client.Mock{
@@ -59,5 +59,5 @@ func TestCreateRepoInvalidResponseBody(t *testing.T) {
 	assert.Nil(t, res)
 	assert.NotNil(t, err)
 	assert.EqualValues(t, http.StatusInternalServerError, err.StatusCode)
-	assert.EqualValues(t, "Invalid Error Response Body", err.Message)
+	assert.EqualValues(t, "Invalid Response Body", err.Message)
 }
