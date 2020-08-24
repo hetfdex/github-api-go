@@ -11,14 +11,14 @@ import (
 type repositoryService struct{}
 
 type repositoryServiceInterface interface {
-	CreateRepo(request model.CreateRepoRequest) (*model.CreateRepoResponse, error)
+	CreateRepo(request model.CreateRepoRequest) (*model.CreateRepoResponse, model.APIError)
 }
 
 // RepositoryService entry point
 var RepositoryService repositoryServiceInterface
 
 func init() {
-	var RepositoryService = &repositoryService{}
+	RepositoryService = &repositoryService{}
 }
 
 func (r *repositoryService) CreateRepo(request model.CreateRepoRequest) (*model.CreateRepoResponse, model.APIError) {
