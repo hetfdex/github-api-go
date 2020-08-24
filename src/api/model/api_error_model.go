@@ -4,57 +4,57 @@ import "net/http"
 
 // APIError model
 type APIError interface {
-	StatusCode() int
-	Message() string
-	Error() string
+	GetStatusCode() int
+	GetMessage() string
+	GetError() string
 }
 
 type apiError struct {
-	statusCode int    `json:"status_code"`
-	message    string `json:"message"`
-	error      string `json:"error,omitempty"`
+	StatusCode int    `json:"status_code"`
+	Message    string `json:"message"`
+	Error      string `json:"error,omitempty"`
 }
 
-func (a *apiError) StatusCode() int {
-	return a.statusCode
+func (a *apiError) GetStatusCode() int {
+	return a.StatusCode
 }
 
-func (a *apiError) Message() string {
-	return a.message
+func (a *apiError) GetMessage() string {
+	return a.Message
 }
 
-func (a *apiError) Error() string {
-	return a.error
+func (a *apiError) GetError() string {
+	return a.Error
 }
 
 // NewAPIError constructor
 func NewAPIError(statusCode int, message string) APIError {
 	return &apiError{
-		statusCode: statusCode,
-		message:    message,
+		StatusCode: statusCode,
+		Message:    message,
 	}
 }
 
 // NewNotFoundError constructor
 func NewNotFoundError(message string) APIError {
 	return &apiError{
-		statusCode: http.StatusNotFound,
-		message:    message,
+		StatusCode: http.StatusNotFound,
+		Message:    message,
 	}
 }
 
 // NewInternalServerError constructor
 func NewInternalServerError(message string) APIError {
 	return &apiError{
-		statusCode: http.StatusInternalServerError,
-		message:    message,
+		StatusCode: http.StatusInternalServerError,
+		Message:    message,
 	}
 }
 
 // NewBadRequestError constructor
 func NewBadRequestError(message string) APIError {
 	return &apiError{
-		statusCode: http.StatusBadRequest,
-		message:    message,
+		StatusCode: http.StatusBadRequest,
+		Message:    message,
 	}
 }
