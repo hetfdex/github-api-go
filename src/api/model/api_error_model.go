@@ -4,19 +4,19 @@ import "net/http"
 
 // APIError model
 type APIError interface {
-	Status() int
+	StatusCode() int
 	Message() string
 	Error() string
 }
 
 type apiError struct {
-	status  int    `json:"status"`
-	message string `json:"message"`
-	error   string `json:"error, omitempty"`
+	statusCode int    `json:"status_code"`
+	message    string `json:"message"`
+	error      string `json:"error,omitempty"`
 }
 
-func (a *apiError) Status() int {
-	return a.status
+func (a *apiError) StatusCode() int {
+	return a.statusCode
 }
 
 func (a *apiError) Message() string {
@@ -27,26 +27,34 @@ func (a *apiError) Error() string {
 	return a.error
 }
 
+// NewAPIError constructor
+func NewAPIError(statusCode int, message string) APIError {
+	return &apiError{
+		statusCode: statusCode,
+		message:    message,
+	}
+}
+
 // NewNotFoundError constructor
 func NewNotFoundError(message string) APIError {
 	return &apiError{
-		status:  http.StatusNotFound,
-		message: message,
+		statusCode: http.StatusNotFound,
+		message:    message,
 	}
 }
 
 // NewInternalServerError constructor
 func NewInternalServerError(message string) APIError {
 	return &apiError{
-		status:  http.StatusInternalServerError,
-		message: message,
+		statusCode: http.StatusInternalServerError,
+		message:    message,
 	}
 }
 
 // NewBadRequestError constructor
 func NewBadRequestError(message string) APIError {
 	return &apiError{
-		status:  http.StatusBadRequest,
-		message: message,
+		statusCode: http.StatusBadRequest,
+		message:    message,
 	}
 }
