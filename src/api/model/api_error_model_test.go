@@ -15,9 +15,9 @@ func TestNewAPIError(t *testing.T) {
 	error := NewAPIError(statusCode, message)
 
 	assert.NotNil(t, error)
-	assert.EqualValues(t, http.StatusFailedDependency, error.StatusCode())
-	assert.EqualValues(t, message, error.Message())
-	assert.EqualValues(t, "", error.Error())
+	assert.EqualValues(t, http.StatusFailedDependency, error.GetStatusCode())
+	assert.EqualValues(t, message, error.GetMessage())
+	assert.EqualValues(t, "", error.GetError())
 
 }
 
@@ -25,9 +25,9 @@ func TestNewNotFoundError(t *testing.T) {
 	error := NewNotFoundError(message)
 
 	assert.NotNil(t, error)
-	assert.EqualValues(t, http.StatusNotFound, error.StatusCode())
-	assert.EqualValues(t, message, error.Message())
-	assert.EqualValues(t, "", error.Error())
+	assert.EqualValues(t, http.StatusNotFound, error.GetStatusCode())
+	assert.EqualValues(t, message, error.GetMessage())
+	assert.EqualValues(t, "", error.GetError())
 
 }
 
@@ -35,16 +35,16 @@ func TestNewInternalServerError(t *testing.T) {
 	error := NewInternalServerError(message)
 
 	assert.NotNil(t, error)
-	assert.EqualValues(t, http.StatusInternalServerError, error.StatusCode())
-	assert.EqualValues(t, message, error.Message())
-	assert.EqualValues(t, "", error.Error())
+	assert.EqualValues(t, http.StatusInternalServerError, error.GetStatusCode())
+	assert.EqualValues(t, message, error.GetMessage())
+	assert.EqualValues(t, "", error.GetError())
 }
 
 func TestNewBadRequestError(t *testing.T) {
 	error := NewBadRequestError(message)
 
 	assert.NotNil(t, error)
-	assert.EqualValues(t, http.StatusBadRequest, error.StatusCode())
-	assert.EqualValues(t, message, error.Message())
-	assert.EqualValues(t, "", error.Error())
+	assert.EqualValues(t, http.StatusBadRequest, error.GetStatusCode())
+	assert.EqualValues(t, message, error.GetMessage())
+	assert.EqualValues(t, "", error.GetError())
 }
