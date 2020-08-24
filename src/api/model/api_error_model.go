@@ -1,6 +1,10 @@
 package model
 
-import "net/http"
+import (
+	"encoding/json"
+	"errors"
+	"net/http"
+)
 
 // APIError model
 type APIError interface {
@@ -33,6 +37,18 @@ func NewAPIError(statusCode int, message string) APIError {
 		StatusCode: statusCode,
 		Message:    message,
 	}
+}
+
+// NewAPIErrorFromBytes constructor
+func NewAPIErrorFromBytes(body []byte) (APIError, error) {
+	var result apiError
+
+	err := json.Unmarshal(body, &result)
+
+	if err != nil {
+		return nil, errors.New("Invalid JSON Body")
+	}
+	return &result, nil
 }
 
 // NewNotFoundError constructor
