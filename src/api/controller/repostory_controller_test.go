@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -85,13 +86,26 @@ func TestCreateRepoServiceError(t *testing.T) {
 }
 
 func TestCreateRepoValidResponse(t *testing.T) {
-	responseBody := ioutil.NopCloser(strings.NewReader(`{
-		"message":"message"
+	validCreatedResponse := ioutil.NopCloser(strings.NewReader(`{
+		"id": 0,
+		"name": "name",
+		"full_name": "full_name",
+		"owner": {
+			"login": "login",
+			"id": 0,
+			"url": "url",
+			"html_url": "html_url"
+			},
+		"permissions": {
+			"admin": true,
+			"push": true,
+			"pull": true
+			}
 		}`))
 
 	response := &http.Response{
-		StatusCode: http.StatusUnauthorized,
-		Body:       responseBody,
+		StatusCode: http.StatusCreated,
+		Body:       validCreatedResponse,
 	}
 
 	mock := client.Mock{
@@ -108,7 +122,8 @@ func TestCreateRepoValidResponse(t *testing.T) {
 	c, _ := gin.CreateTestContext(res)
 
 	body := `{
-		"name": "name"
+		"name": "name",
+		"description":"description"
 		}`
 
 	request, _ := http.NewRequest(http.MethodPost, "/url", strings.NewReader(body))
@@ -117,11 +132,13 @@ func TestCreateRepoValidResponse(t *testing.T) {
 
 	CreateRepo(c)
 
-	apiError, err := model.NewAPIErrorFromBytes(res.Body.Bytes())
+	var validResponse model.CreateRepoResponse
+
+	err := json.Unmarshal(res.Body.Bytes(), &validResponse)
 
 	assert.Nil(t, err)
-	assert.NotNil(t, apiError)
-	assert.EqualValues(t, http.StatusUnauthorized, res.Code)
-	assert.EqualValues(t, http.StatusUnauthorized, apiError.GetStatusCode())
-	assert.EqualValues(t, "message", apiError.GetMessage())
+	assert.EqualValues(t, http.StatusCreated, res.Code)
+	assert.EqualValues(t, 0, validResponse.ID)
+	assert.EqualValues(t, "name", validResponse.Name)
+	assert.EqualValues(t, "login", validResponse.Owner)
 }
