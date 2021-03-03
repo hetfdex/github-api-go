@@ -1,2 +1,2 @@
 # github-api-go
-Microservices in Go to interact with GitHub API
+Microservice in Go to interact with GitHub API
