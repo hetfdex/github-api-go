@@ -24,7 +24,7 @@ func TestCreateRepoPostError(t *testing.T) {
 
 	var req github.CreateRepoRequest
 
-	res, err := CreateRepo(req, "")
+	res, err := Provider.CreateRepo(req, "")
 
 	rest.StopMock()
 
@@ -49,7 +49,7 @@ func TestCreateRepoHandleResponseReadAllError(t *testing.T) {
 
 	var req github.CreateRepoRequest
 
-	res, err := CreateRepo(req, "")
+	res, err := Provider.CreateRepo(req, "")
 
 	rest.StopMock()
 
@@ -72,7 +72,7 @@ func TestCreateRepoHandleResponseNotOkNewErrorFromBytesError(t *testing.T) {
 
 	var req github.CreateRepoRequest
 
-	res, err := CreateRepo(req, "")
+	res, err := Provider.CreateRepo(req, "")
 
 	rest.StopMock()
 
@@ -100,7 +100,7 @@ func TestCreateRepoHandleResponseNotOk(t *testing.T) {
 
 	var req github.CreateRepoRequest
 
-	res, err := CreateRepo(req, "")
+	res, err := Provider.CreateRepo(req, "")
 
 	rest.StopMock()
 
@@ -124,7 +124,7 @@ func TestCreateRepoHandleResponseOkNewCreateRepoResponseFromBytesError(t *testin
 
 	var req github.CreateRepoRequest
 
-	res, err := CreateRepo(req, "")
+	res, err := Provider.CreateRepo(req, "")
 
 	rest.StopMock()
 
@@ -164,7 +164,7 @@ func TestCreateRepoHandleResponseOk(t *testing.T) {
 
 	var req github.CreateRepoRequest
 
-	res, err := CreateRepo(req, "")
+	res, err := Provider.CreateRepo(req, "")
 
 	rest.StopMock()
 
