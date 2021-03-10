@@ -38,7 +38,7 @@ func NewErrorFromBytes(statusCode int, body []byte) (*github.ErrorResponse, *git
 	return &result, nil
 }
 
-func NewCreateRepoFromBytes(body []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
+func NewCreateRepoResponseFromBytes(body []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
 	var result github.CreateRepoResponse
 
 	err := json.Unmarshal(body, &result)
