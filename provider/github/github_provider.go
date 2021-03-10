@@ -12,7 +12,16 @@ import (
 	"net/http"
 )
 
-func CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoResponse, *github.ErrorResponse) {
+type RepoCreator interface {
+	CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoResponse, *github.ErrorResponse)
+}
+
+type provider struct {
+}
+
+var Provider RepoCreator = &provider{}
+
+func (m *provider) CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoResponse, *github.ErrorResponse) {
 	header := makeHeader(token)
 
 	body := makeBody(req)
