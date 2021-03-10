@@ -58,14 +58,6 @@ func handleResponse(statusCode int, body io.ReadCloser) (*github.CreateRepoRespo
 	return handleResponseOk(bodyBytes)
 
 }
-func handleResponseOk(bytes []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
-	createRepoResponse, err := util.NewCreateRepoResponseFromBytes(bytes)
-
-	if err != nil {
-		return nil, err
-	}
-	return createRepoResponse, nil
-}
 
 func handleResponseNotOk(statusCode int, bytes []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
 	errorResponse, err := util.NewErrorFromBytes(statusCode, bytes)
@@ -74,4 +66,13 @@ func handleResponseNotOk(statusCode int, bytes []byte) (*github.CreateRepoRespon
 		return nil, err
 	}
 	return nil, errorResponse
+}
+
+func handleResponseOk(bytes []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
+	createRepoResponse, err := util.NewCreateRepoResponseFromBytes(bytes)
+
+	if err != nil {
+		return nil, err
+	}
+	return createRepoResponse, nil
 }
