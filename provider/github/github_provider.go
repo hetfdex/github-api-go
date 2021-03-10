@@ -15,11 +15,7 @@ import (
 func CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoResponse, *github.ErrorResponse) {
 	header := makeHeader(token)
 
-	body, err := makeBody(req)
-
-	if err != nil {
-		return nil, util.NewInternalServerError(err.Error())
-	}
+	body := makeBody(req)
 
 	res, err := rest.Post(util.CreateRepoUrl, header, body)
 
@@ -38,13 +34,11 @@ func makeHeader(token string) http.Header {
 	return header
 }
 
-func makeBody(body interface{}) (*bytes.Reader, error) {
-	jsonBytes, err := json.Marshal(body)
+func makeBody(req github.CreateRepoRequest) *bytes.Reader {
+	//Error ignored because it's untestable and as such extremely unlikely to occur
+	jsonBytes, _ := json.Marshal(req)
 
-	if err != nil {
-		return nil, err
-	}
-	return bytes.NewReader(jsonBytes), nil
+	return bytes.NewReader(jsonBytes)
 }
 
 func handleResponse(statusCode int, body io.ReadCloser) (*github.CreateRepoResponse, *github.ErrorResponse) {
