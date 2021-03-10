@@ -65,7 +65,7 @@ func handleResponse(statusCode int, body io.ReadCloser) (*github.CreateRepoRespo
 
 }
 func handleResponseOk(bytes []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
-	createRepoResponse, err := util.NewCreateRepoFromBytes(bytes)
+	createRepoResponse, err := util.NewCreateRepoResponseFromBytes(bytes)
 
 	if err != nil {
 		return nil, err
