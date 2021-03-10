@@ -29,13 +29,17 @@ func CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoR
 func makeHeader(token string) http.Header {
 	header := http.Header{}
 
-	header.Set(util.AuthorizationHeaderKey, fmt.Sprintf(util.AuthorizationHeaderValue, token))
+	key := util.AuthorizationHeaderKey
+
+	value := fmt.Sprintf(util.AuthorizationHeaderValue, token)
+
+	header.Set(key, value)
 
 	return header
 }
 
 func makeBody(req github.CreateRepoRequest) *bytes.Reader {
-	//Error ignored because it's untestable and as such extremely unlikely to occur
+	//Error ignored because it's extremely unlikely to occur
 	jsonBytes, _ := json.Marshal(req)
 
 	return bytes.NewReader(jsonBytes)
