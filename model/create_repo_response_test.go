@@ -1,8 +1,7 @@
-package util
+package model
 
 import (
 	"encoding/json"
-	"github.com/hetfdex/github-api-go/model"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
@@ -20,17 +19,17 @@ func TestNewCreateRepoResponseFromBytesFailed(t *testing.T) {
 }
 
 func TestNewCreateRepoResponseFromBytesOk(t *testing.T) {
-	testResponse := &model.CreateRepoResponse{
+	testResponse := &CreateRepoResponse{
 		ID:       0,
 		Name:     "name",
 		FullName: "fullName",
-		Owner: model.Owner{
+		Owner: Owner{
 			Login:   "login",
 			ID:      1,
 			URL:     "url",
 			HtmlUrl: "htmlUrl",
 		},
-		Permissions: model.Permissions{
+		Permissions: Permissions{
 			Admin: false,
 			Push:  false,
 			Pull:  false,

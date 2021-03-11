@@ -1,5 +1,7 @@
 package model
 
+import "encoding/json"
+
 type CreateRepoResponse struct {
 	ID          int         `json:"id"`
 	Name        string      `json:"name"`
@@ -19,4 +21,21 @@ type Permissions struct {
 	Admin bool `json:"admin"`
 	Push  bool `json:"push"`
 	Pull  bool `json:"pull"`
+}
+
+type CreateRepoResponseDto struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Owner string `json:"owner"`
+}
+
+func NewCreateRepoResponseFromBytes(body []byte) (*CreateRepoResponse, *ErrorResponse) {
+	var result CreateRepoResponse
+
+	err := json.Unmarshal(body, &result)
+
+	if err != nil {
+		return nil, NewInternalServerError(err.Error())
+	}
+	return &result, nil
 }
