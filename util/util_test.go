@@ -59,7 +59,7 @@ func TestNewErrorFromBytesFailed(t *testing.T) {
 
 	assert.Nil(t, result)
 	assert.NotNil(t, err)
-	assert.EqualValues(t, http.StatusInternalServerError, err.StatusCode)
+	assert.EqualValues(t, statusCode, err.StatusCode)
 	assert.EqualValues(t, "unexpected end of JSON input", err.Message)
 }
 
@@ -68,7 +68,7 @@ func TestNewErrorFromBytesOk(t *testing.T) {
 
 	message := "test_message"
 
-	testError := newError(http.StatusFailedDependency, message)
+	testError := newError(statusCode, message)
 
 	body, _ := json.Marshal(testError)
 

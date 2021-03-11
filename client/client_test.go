@@ -5,6 +5,7 @@ import (
 	"github.com/hetfdex/github-api-go/mock"
 	"github.com/stretchr/testify/assert"
 	"net/http"
+	"os"
 	"testing"
 )
 
@@ -12,10 +13,14 @@ var reader = bytes.NewReader([]byte(`test`))
 
 var header = http.Header{}
 
+func TestMain(m *testing.M) {
+	httpClient = &mock.DoerMock{}
+
+	os.Exit(m.Run())
+}
+
 func TestPostNewRequestError(t *testing.T) {
 	url := ":abc1{DEf2=test@test.com:666/db?"
-
-	httpClient = &mock.DoerMock{}
 
 	res, err := PostClient.Post(url, header, reader)
 
@@ -26,8 +31,6 @@ func TestPostNewRequestError(t *testing.T) {
 func TestPostError(t *testing.T) {
 	url := mock.DoErrorUrl
 
-	httpClient = &mock.DoerMock{}
-
 	res, err := PostClient.Post(url, header, reader)
 
 	assert.Nil(t, res)
@@ -37,8 +40,6 @@ func TestPostError(t *testing.T) {
 
 func TestPostOk(t *testing.T) {
 	url := "https://www.google.com"
-
-	httpClient = &mock.DoerMock{}
 
 	res, err := PostClient.Post(url, header, reader)
 

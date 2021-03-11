@@ -5,16 +5,20 @@ import (
 	"github.com/hetfdex/github-api-go/model"
 	"github.com/stretchr/testify/assert"
 	"net/http"
+	"os"
 	"testing"
 )
 
-func TestCreateRepoPostError(t *testing.T) {
-	var req model.CreateRepoRequest
+var req model.CreateRepoRequest
 
+func TestMain(m *testing.M) {
 	Provider = &provider{
 		&mock.PosterMock{},
 	}
+	os.Exit(m.Run())
+}
 
+func TestCreateRepoPostError(t *testing.T) {
 	res, err := Provider.CreateRepo(req, mock.PostErrorAuthorizationHeaderValue)
 
 	assert.Nil(t, res)
@@ -24,12 +28,6 @@ func TestCreateRepoPostError(t *testing.T) {
 }
 
 func TestCreateRepoHandleResponseReadAllError(t *testing.T) {
-	var req model.CreateRepoRequest
-
-	Provider = &provider{
-		&mock.PosterMock{},
-	}
-
 	res, err := Provider.CreateRepo(req, mock.HandleResponseReadAllErrorAuthorizationHeaderValue)
 
 	assert.Nil(t, res)
@@ -39,12 +37,6 @@ func TestCreateRepoHandleResponseReadAllError(t *testing.T) {
 }
 
 func TestCreateRepoHandleResponseNotOkNewErrorFromBytesError(t *testing.T) {
-	var req model.CreateRepoRequest
-
-	Provider = &provider{
-		&mock.PosterMock{},
-	}
-
 	res, err := Provider.CreateRepo(req, mock.HandleResponseNotOkNewErrorFromBytesErrorAuthorizationHeaderValue)
 
 	assert.Nil(t, res)
@@ -54,12 +46,6 @@ func TestCreateRepoHandleResponseNotOkNewErrorFromBytesError(t *testing.T) {
 }
 
 func TestCreateRepoHandleResponseNotOk(t *testing.T) {
-	var req model.CreateRepoRequest
-
-	Provider = &provider{
-		&mock.PosterMock{},
-	}
-
 	res, err := Provider.CreateRepo(req, mock.HandleResponseNotOkAuthorizationHeaderValue)
 
 	assert.Nil(t, res)
@@ -70,12 +56,6 @@ func TestCreateRepoHandleResponseNotOk(t *testing.T) {
 }
 
 func TestCreateRepoHandleResponseOkNewCreateRepoResponseFromBytesError(t *testing.T) {
-	var req model.CreateRepoRequest
-
-	Provider = &provider{
-		&mock.PosterMock{},
-	}
-
 	res, err := Provider.CreateRepo(req, mock.HandleResponseOkNewCreateRepoResponseFromBytesErrorAuthorizationHeaderValue)
 
 	assert.Nil(t, res)
@@ -85,12 +65,6 @@ func TestCreateRepoHandleResponseOkNewCreateRepoResponseFromBytesError(t *testin
 }
 
 func TestCreateRepoHandleResponseOk(t *testing.T) {
-	var req model.CreateRepoRequest
-
-	Provider = &provider{
-		&mock.PosterMock{},
-	}
-
 	res, err := Provider.CreateRepo(req, "")
 
 	assert.Nil(t, err)
