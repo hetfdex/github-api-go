@@ -18,13 +18,6 @@ func NewInternalServerError(message string) *model.ErrorResponse {
 	return newError(http.StatusInternalServerError, message)
 }
 
-func newError(statusCode int, message string) *model.ErrorResponse {
-	return &model.ErrorResponse{
-		StatusCode: statusCode,
-		Message:    message,
-	}
-}
-
 func NewErrorFromBytes(statusCode int, body []byte) (*model.ErrorResponse, *model.ErrorResponse) {
 	var result model.ErrorResponse
 
@@ -38,13 +31,9 @@ func NewErrorFromBytes(statusCode int, body []byte) (*model.ErrorResponse, *mode
 	return &result, nil
 }
 
-func NewCreateRepoResponseFromBytes(body []byte) (*model.CreateRepoResponse, *model.ErrorResponse) {
-	var result model.CreateRepoResponse
-
-	err := json.Unmarshal(body, &result)
-
-	if err != nil {
-		return nil, NewInternalServerError(err.Error())
+func newError(statusCode int, message string) *model.ErrorResponse {
+	return &model.ErrorResponse{
+		StatusCode: statusCode,
+		Message:    message,
 	}
-	return &result, nil
 }
