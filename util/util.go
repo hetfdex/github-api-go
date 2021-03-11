@@ -31,7 +31,7 @@ func NewErrorFromBytes(statusCode int, body []byte) (*github.ErrorResponse, *git
 	err := json.Unmarshal(body, &result)
 
 	if err != nil {
-		return nil, NewInternalServerError(UnmarshalJsonFailureMessage)
+		return nil, NewInternalServerError(err.Error())
 	}
 	result.StatusCode = statusCode
 
@@ -44,7 +44,7 @@ func NewCreateRepoResponseFromBytes(body []byte) (*github.CreateRepoResponse, *g
 	err := json.Unmarshal(body, &result)
 
 	if err != nil {
-		return nil, NewInternalServerError(UnmarshalJsonFailureMessage)
+		return nil, NewInternalServerError(err.Error())
 	}
 	return &result, nil
 }

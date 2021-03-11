@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/hetfdex/github-api-go/client/rest"
+	"github.com/hetfdex/github-api-go/client"
 	"github.com/hetfdex/github-api-go/model/github"
 	"github.com/hetfdex/github-api-go/util"
 	"io"
@@ -26,7 +26,7 @@ func (m *provider) CreateRepo(req github.CreateRepoRequest, token string) (*gith
 
 	body := makeBody(req)
 
-	res, err := rest.Post(util.CreateRepoUrl, header, body)
+	res, err := client.Post(util.CreateRepoUrl, header, body)
 
 	if err != nil {
 		return nil, util.NewInternalServerError(err.Error())
@@ -55,15 +55,13 @@ func makeBody(req github.CreateRepoRequest) *bytes.Reader {
 }
 
 func handleResponse(statusCode int, body io.ReadCloser) (*github.CreateRepoResponse, *github.ErrorResponse) {
+	defer body.Close()
+
 	bodyBytes, err := ioutil.ReadAll(body)
 
 	if err != nil {
 		return nil, util.NewInternalServerError(err.Error())
 	}
-
-	defer func() {
-		_ = body.Close()
-	}()
 
 	if statusCode > 299 {
 		return handleResponseNotOk(statusCode, bodyBytes)

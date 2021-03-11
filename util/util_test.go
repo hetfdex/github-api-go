@@ -60,7 +60,7 @@ func TestNewErrorFromBytesFailed(t *testing.T) {
 	assert.Nil(t, result)
 	assert.NotNil(t, err)
 	assert.EqualValues(t, http.StatusInternalServerError, err.StatusCode)
-	assert.EqualValues(t, UnmarshalJsonFailureMessage, err.Message)
+	assert.EqualValues(t, "unexpected end of JSON input", err.Message)
 }
 
 func TestNewErrorFromBytesOk(t *testing.T) {
@@ -88,7 +88,7 @@ func TestNewCreateRepoResponseFromBytesFailed(t *testing.T) {
 	assert.Nil(t, result)
 	assert.NotNil(t, err)
 	assert.EqualValues(t, http.StatusInternalServerError, err.StatusCode)
-	assert.EqualValues(t, UnmarshalJsonFailureMessage, err.Message)
+	assert.EqualValues(t, "unexpected end of JSON input", err.Message)
 }
 
 func TestNewCreateRepoResponseFromBytesOk(t *testing.T) {
