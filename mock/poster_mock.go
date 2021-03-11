@@ -11,28 +11,14 @@ import (
 	"strings"
 )
 
-const DoErrorUrl = "doErrorUrl"
 const PostErrorAuthorizationHeaderValue = "postError"
 const HandleResponseReadAllErrorAuthorizationHeaderValue = "handleResponseReadAllError"
 const HandleResponseNotOkNewErrorFromBytesErrorAuthorizationHeaderValue = "handleResponseNotOkNewErrorFromBytesError"
 const HandleResponseNotOkAuthorizationHeaderValue = "handleResponseNotOk"
 const HandleResponseOkNewCreateRepoResponseFromBytesErrorAuthorizationHeaderValue = "handleResponseOkNewCreateRepoResponseFromBytesError"
 
-type DoerMock struct {
-	DoFunc func(*http.Request) (*http.Response, error)
-}
-
 type PosterMock struct {
 	PostFunc func(string, http.Header, *bytes.Reader) (*http.Response, error)
-}
-
-func (*DoerMock) Do(req *http.Request) (*http.Response, error) {
-	if req.URL.String() == DoErrorUrl {
-		return nil, errors.New(DoErrorUrl)
-	}
-	return &http.Response{
-		StatusCode: http.StatusOK,
-	}, nil
 }
 
 func (*PosterMock) Post(_ string, header http.Header, _ *bytes.Reader) (*http.Response, error) {
