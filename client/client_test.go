@@ -15,9 +15,9 @@ var header = http.Header{}
 func TestPostNewRequestError(t *testing.T) {
 	url := ":abc1{DEf2=test@test.com:666/db?"
 
-	Client = &mock.DoerMock{}
+	httpClient = &mock.DoerMock{}
 
-	res, err := Post(url, header, reader)
+	res, err := PostClient.Post(url, header, reader)
 
 	assert.Nil(t, res)
 	assert.NotNil(t, err)
@@ -26,9 +26,9 @@ func TestPostNewRequestError(t *testing.T) {
 func TestPostError(t *testing.T) {
 	url := mock.DoErrorUrl
 
-	Client = &mock.DoerMock{}
+	httpClient = &mock.DoerMock{}
 
-	res, err := Post(url, header, reader)
+	res, err := PostClient.Post(url, header, reader)
 
 	assert.Nil(t, res)
 	assert.NotNil(t, err)
@@ -38,9 +38,9 @@ func TestPostError(t *testing.T) {
 func TestPostOk(t *testing.T) {
 	url := "https://www.google.com"
 
-	Client = &mock.DoerMock{}
+	httpClient = &mock.DoerMock{}
 
-	res, err := Post(url, header, reader)
+	res, err := PostClient.Post(url, header, reader)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, res)

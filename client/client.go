@@ -7,14 +7,23 @@ import (
 )
 
 type Doer interface {
-	Do(req *http.Request) (*http.Response, error)
+	Do(*http.Request) (*http.Response, error)
 }
 
-var Client Doer = &http.Client{
+type Poster interface {
+	Post(string, http.Header, *bytes.Reader) (*http.Response, error)
+}
+
+type poster struct {
+}
+
+var httpClient Doer = &http.Client{
 	Timeout: time.Second * 10,
 }
 
-func Post(url string, header http.Header, body *bytes.Reader) (*http.Response, error) {
+var PostClient Poster = &poster{}
+
+func (*poster) Post(url string, header http.Header, body *bytes.Reader) (*http.Response, error) {
 	req, err := http.NewRequest(http.MethodPost, url, body)
 
 	if err != nil {
@@ -23,7 +32,7 @@ func Post(url string, header http.Header, body *bytes.Reader) (*http.Response, e
 	}
 	req.Header = header
 
-	res, err := Client.Do(req)
+	res, err := httpClient.Do(req)
 
 	if err != nil {
 		return nil, err
