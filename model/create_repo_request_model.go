@@ -1,4 +1,4 @@
-package github
+package model
 
 type CreateRepoRequest struct {
 	Name        string `json:"name"`

@@ -1,4 +1,4 @@
-package github
+package model
 
 type CreateRepoResponse struct {
 	ID          int         `json:"id"`

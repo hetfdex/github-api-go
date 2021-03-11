@@ -2,31 +2,31 @@ package util
 
 import (
 	"encoding/json"
-	"github.com/hetfdex/github-api-go/model/github"
+	"github.com/hetfdex/github-api-go/model"
 	"net/http"
 )
 
-func NewNotFoundError(message string) *github.ErrorResponse {
+func NewNotFoundError(message string) *model.ErrorResponse {
 	return newError(http.StatusNotFound, message)
 }
 
-func NewBadRequestError(message string) *github.ErrorResponse {
+func NewBadRequestError(message string) *model.ErrorResponse {
 	return newError(http.StatusBadRequest, message)
 }
 
-func NewInternalServerError(message string) *github.ErrorResponse {
+func NewInternalServerError(message string) *model.ErrorResponse {
 	return newError(http.StatusInternalServerError, message)
 }
 
-func newError(statusCode int, message string) *github.ErrorResponse {
-	return &github.ErrorResponse{
+func newError(statusCode int, message string) *model.ErrorResponse {
+	return &model.ErrorResponse{
 		StatusCode: statusCode,
 		Message:    message,
 	}
 }
 
-func NewErrorFromBytes(statusCode int, body []byte) (*github.ErrorResponse, *github.ErrorResponse) {
-	var result github.ErrorResponse
+func NewErrorFromBytes(statusCode int, body []byte) (*model.ErrorResponse, *model.ErrorResponse) {
+	var result model.ErrorResponse
 
 	err := json.Unmarshal(body, &result)
 
@@ -38,8 +38,8 @@ func NewErrorFromBytes(statusCode int, body []byte) (*github.ErrorResponse, *git
 	return &result, nil
 }
 
-func NewCreateRepoResponseFromBytes(body []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
-	var result github.CreateRepoResponse
+func NewCreateRepoResponseFromBytes(body []byte) (*model.CreateRepoResponse, *model.ErrorResponse) {
+	var result model.CreateRepoResponse
 
 	err := json.Unmarshal(body, &result)
 

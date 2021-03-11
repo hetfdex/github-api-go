@@ -1,11 +1,11 @@
-package github
+package provider
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/hetfdex/github-api-go/client"
-	"github.com/hetfdex/github-api-go/model/github"
+	"github.com/hetfdex/github-api-go/model"
 	"github.com/hetfdex/github-api-go/util"
 	"io"
 	"io/ioutil"
@@ -13,7 +13,7 @@ import (
 )
 
 type RepoCreator interface {
-	CreateRepo(github.CreateRepoRequest, string) (*github.CreateRepoResponse, *github.ErrorResponse)
+	CreateRepo(model.CreateRepoRequest, string) (*model.CreateRepoResponse, *model.ErrorResponse)
 }
 
 type provider struct {
@@ -24,7 +24,7 @@ var Provider RepoCreator = &provider{
 	client.PostClient,
 }
 
-func (p *provider) CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoResponse, *github.ErrorResponse) {
+func (p *provider) CreateRepo(req model.CreateRepoRequest, token string) (*model.CreateRepoResponse, *model.ErrorResponse) {
 	header := makeHeader(token)
 
 	body := makeBody(req)
@@ -50,14 +50,14 @@ func makeHeader(token string) http.Header {
 	return header
 }
 
-func makeBody(req github.CreateRepoRequest) *bytes.Reader {
+func makeBody(req model.CreateRepoRequest) *bytes.Reader {
 	//Error ignored because it's extremely unlikely to occur
 	jsonBytes, _ := json.Marshal(req)
 
 	return bytes.NewReader(jsonBytes)
 }
 
-func handleResponse(statusCode int, body io.ReadCloser) (*github.CreateRepoResponse, *github.ErrorResponse) {
+func handleResponse(statusCode int, body io.ReadCloser) (*model.CreateRepoResponse, *model.ErrorResponse) {
 	defer body.Close()
 
 	bodyBytes, err := ioutil.ReadAll(body)
@@ -73,7 +73,7 @@ func handleResponse(statusCode int, body io.ReadCloser) (*github.CreateRepoRespo
 
 }
 
-func handleResponseNotOk(statusCode int, bytes []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
+func handleResponseNotOk(statusCode int, bytes []byte) (*model.CreateRepoResponse, *model.ErrorResponse) {
 	errorResponse, err := util.NewErrorFromBytes(statusCode, bytes)
 
 	if err != nil {
@@ -82,7 +82,7 @@ func handleResponseNotOk(statusCode int, bytes []byte) (*github.CreateRepoRespon
 	return nil, errorResponse
 }
 
-func handleResponseOk(bytes []byte) (*github.CreateRepoResponse, *github.ErrorResponse) {
+func handleResponseOk(bytes []byte) (*model.CreateRepoResponse, *model.ErrorResponse) {
 	createRepoResponse, err := util.NewCreateRepoResponseFromBytes(bytes)
 
 	if err != nil {

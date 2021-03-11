@@ -1,15 +1,15 @@
-package github
+package provider
 
 import (
 	"github.com/hetfdex/github-api-go/mock"
-	"github.com/hetfdex/github-api-go/model/github"
+	"github.com/hetfdex/github-api-go/model"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 )
 
 func TestCreateRepoPostError(t *testing.T) {
-	var req github.CreateRepoRequest
+	var req model.CreateRepoRequest
 
 	Provider = &provider{
 		&mock.PosterMock{},
@@ -24,7 +24,7 @@ func TestCreateRepoPostError(t *testing.T) {
 }
 
 func TestCreateRepoHandleResponseReadAllError(t *testing.T) {
-	var req github.CreateRepoRequest
+	var req model.CreateRepoRequest
 
 	Provider = &provider{
 		&mock.PosterMock{},
@@ -39,7 +39,7 @@ func TestCreateRepoHandleResponseReadAllError(t *testing.T) {
 }
 
 func TestCreateRepoHandleResponseNotOkNewErrorFromBytesError(t *testing.T) {
-	var req github.CreateRepoRequest
+	var req model.CreateRepoRequest
 
 	Provider = &provider{
 		&mock.PosterMock{},
@@ -54,7 +54,7 @@ func TestCreateRepoHandleResponseNotOkNewErrorFromBytesError(t *testing.T) {
 }
 
 func TestCreateRepoHandleResponseNotOk(t *testing.T) {
-	var req github.CreateRepoRequest
+	var req model.CreateRepoRequest
 
 	Provider = &provider{
 		&mock.PosterMock{},
@@ -70,7 +70,7 @@ func TestCreateRepoHandleResponseNotOk(t *testing.T) {
 }
 
 func TestCreateRepoHandleResponseOkNewCreateRepoResponseFromBytesError(t *testing.T) {
-	var req github.CreateRepoRequest
+	var req model.CreateRepoRequest
 
 	Provider = &provider{
 		&mock.PosterMock{},
@@ -85,7 +85,7 @@ func TestCreateRepoHandleResponseOkNewCreateRepoResponseFromBytesError(t *testin
 }
 
 func TestCreateRepoHandleResponseOk(t *testing.T) {
-	var req github.CreateRepoRequest
+	var req model.CreateRepoRequest
 
 	Provider = &provider{
 		&mock.PosterMock{},
