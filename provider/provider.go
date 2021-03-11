@@ -31,7 +31,7 @@ func (p *provider) CreateRepo(req model.CreateRepoRequest, token string) (*model
 	res, err := p.Post(util.CreateRepoUrl, header, body)
 
 	if err != nil {
-		return nil, util.NewInternalServerError(err.Error())
+		return nil, model.NewInternalServerError(err.Error())
 	}
 	return handleResponse(res.StatusCode, res.Body)
 }
@@ -59,7 +59,7 @@ func handleResponse(statusCode int, body io.ReadCloser) (*model.CreateRepoRespon
 	bodyBytes, err := ioutil.ReadAll(body)
 
 	if err != nil {
-		return nil, util.NewInternalServerError(err.Error())
+		return nil, model.NewInternalServerError(err.Error())
 	}
 
 	if statusCode > 299 {
@@ -70,11 +70,11 @@ func handleResponse(statusCode int, body io.ReadCloser) (*model.CreateRepoRespon
 }
 
 func handleResponseNotOk(statusCode int, bytes []byte) *model.ErrorResponse {
-	return util.NewErrorFromBytes(statusCode, bytes)
+	return model.NewErrorFromBytes(statusCode, bytes)
 }
 
 func handleResponseOk(bytes []byte) (*model.CreateRepoResponse, *model.ErrorResponse) {
-	createRepoResponse, err := util.NewCreateRepoResponseFromBytes(bytes)
+	createRepoResponse, err := model.NewCreateRepoResponseFromBytes(bytes)
 
 	if err != nil {
 		return nil, err
