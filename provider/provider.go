@@ -26,7 +26,6 @@ var Provider RepoCreator = &provider{
 
 func (p *provider) CreateRepo(req model.CreateRepoRequest, token string) (*model.CreateRepoResponse, *model.ErrorResponse) {
 	header := makeHeader(token)
-
 	body := makeBody(req)
 
 	res, err := p.Post(util.CreateRepoUrl, header, body)
@@ -34,15 +33,12 @@ func (p *provider) CreateRepo(req model.CreateRepoRequest, token string) (*model
 	if err != nil {
 		return nil, util.NewInternalServerError(err.Error())
 	}
-
 	return handleResponse(res.StatusCode, res.Body)
 }
 
 func makeHeader(token string) http.Header {
 	header := http.Header{}
-
 	key := util.AuthorizationHeaderKey
-
 	value := fmt.Sprintf(util.AuthorizationHeaderValue, token)
 
 	header.Set(key, value)
