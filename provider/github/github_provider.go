@@ -13,20 +13,23 @@ import (
 )
 
 type RepoCreator interface {
-	CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoResponse, *github.ErrorResponse)
+	CreateRepo(github.CreateRepoRequest, string) (*github.CreateRepoResponse, *github.ErrorResponse)
 }
 
 type provider struct {
+	client.Poster
 }
 
-var Provider RepoCreator = &provider{}
+var Provider RepoCreator = &provider{
+	client.PostClient,
+}
 
-func (m *provider) CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoResponse, *github.ErrorResponse) {
+func (p *provider) CreateRepo(req github.CreateRepoRequest, token string) (*github.CreateRepoResponse, *github.ErrorResponse) {
 	header := makeHeader(token)
 
 	body := makeBody(req)
 
-	res, err := client.Post(util.CreateRepoUrl, header, body)
+	res, err := p.Post(util.CreateRepoUrl, header, body)
 
 	if err != nil {
 		return nil, util.NewInternalServerError(err.Error())
