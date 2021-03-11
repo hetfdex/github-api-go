@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hetfdex/github-api-go/client"
+	"github.com/hetfdex/github-api-go/dto"
 	"github.com/hetfdex/github-api-go/model"
 	"github.com/hetfdex/github-api-go/util"
 	"io"
@@ -13,7 +14,7 @@ import (
 )
 
 type RepoCreator interface {
-	CreateRepo(model.CreateRepoRequest, string) (*model.CreateRepoResponse, *model.ErrorResponse)
+	CreateRepo(model.CreateRepoRequest, string) (*model.CreateRepoResponse, *dto.ErrorResponse)
 }
 
 type provider struct {
@@ -24,14 +25,14 @@ var Provider RepoCreator = &provider{
 	client.PostClient,
 }
 
-func (p *provider) CreateRepo(req model.CreateRepoRequest, token string) (*model.CreateRepoResponse, *model.ErrorResponse) {
+func (p *provider) CreateRepo(req model.CreateRepoRequest, token string) (*model.CreateRepoResponse, *dto.ErrorResponse) {
 	header := makeHeader(token)
 	body := makeBody(req)
 
 	res, err := p.Post(util.CreateRepoUrl, header, body)
 
 	if err != nil {
-		return nil, util.NewInternalServerError(err.Error())
+		return nil, util.NewInternalServerDtoError(err.Error())
 	}
 	return handleResponse(res.StatusCode, res.Body)
 }
@@ -53,32 +54,27 @@ func makeBody(req model.CreateRepoRequest) *bytes.Reader {
 	return bytes.NewReader(jsonBytes)
 }
 
-func handleResponse(statusCode int, body io.ReadCloser) (*model.CreateRepoResponse, *model.ErrorResponse) {
+func handleResponse(statusCode int, body io.ReadCloser) (*model.CreateRepoResponse, *dto.ErrorResponse) {
 	defer body.Close()
 
 	bodyBytes, err := ioutil.ReadAll(body)
 
 	if err != nil {
-		return nil, util.NewInternalServerError(err.Error())
+		return nil, util.NewInternalServerDtoError(err.Error())
 	}
 
 	if statusCode > 299 {
-		return handleResponseNotOk(statusCode, bodyBytes)
+		return nil, handleResponseNotOk(statusCode, bodyBytes)
 	}
 	return handleResponseOk(bodyBytes)
 
 }
 
-func handleResponseNotOk(statusCode int, bytes []byte) (*model.CreateRepoResponse, *model.ErrorResponse) {
-	errorResponse, err := util.NewErrorFromBytes(statusCode, bytes)
-
-	if err != nil {
-		return nil, err
-	}
-	return nil, errorResponse
+func handleResponseNotOk(statusCode int, bytes []byte) *dto.ErrorResponse {
+	return util.NewDtoErrorFromBytes(statusCode, bytes)
 }
 
-func handleResponseOk(bytes []byte) (*model.CreateRepoResponse, *model.ErrorResponse) {
+func handleResponseOk(bytes []byte) (*model.CreateRepoResponse, *dto.ErrorResponse) {
 	createRepoResponse, err := util.NewCreateRepoResponseFromBytes(bytes)
 
 	if err != nil {

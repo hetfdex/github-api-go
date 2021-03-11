@@ -52,7 +52,6 @@ func TestCreateRepoHandleResponseNotOk(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.EqualValues(t, http.StatusFailedDependency, err.StatusCode)
 	assert.EqualValues(t, "message", err.Message)
-	assert.EqualValues(t, "documentation_url", err.DocumentationURL)
 }
 
 func TestCreateRepoHandleResponseOkNewCreateRepoResponseFromBytesError(t *testing.T) {
