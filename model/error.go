@@ -19,13 +19,7 @@ type Error struct {
 	Message  string `json:"message"`
 }
 
-type ErrorResponseDto struct {
-	StatusCode int    `json:"status_code"`
-	Message    string `json:"message"`
-	Error      string `json:"error,omitempty"`
-}
-
-func (e *ErrorResponse) ToErrorResponseDto() *ErrorResponseDto {
+func (e *ErrorResponse) ErrorResponseDto() *ErrorResponseDto {
 	return &ErrorResponseDto{
 		StatusCode: e.StatusCode,
 		Message:    e.Message,
@@ -52,21 +46,6 @@ func NewErrorFromBytes(statusCode int, body []byte) *ErrorResponse {
 
 func newError(statusCode int, message string) *ErrorResponse {
 	return &ErrorResponse{
-		StatusCode: statusCode,
-		Message:    message,
-	}
-}
-
-func NewInternalServerDtoError(message string) *ErrorResponseDto {
-	return newDtoError(http.StatusInternalServerError, message)
-}
-
-func NewBadRequestDtoError(message string) *ErrorResponseDto {
-	return newDtoError(http.StatusBadRequest, message)
-}
-
-func newDtoError(statusCode int, message string) *ErrorResponseDto {
-	return &ErrorResponseDto{
 		StatusCode: statusCode,
 		Message:    message,
 	}

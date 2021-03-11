@@ -9,16 +9,3 @@ type CreateRepoRequest struct {
 	HasProjects bool   `json:"has_projects"`
 	HasWiki     bool   `json:"has_wiki"`
 }
-
-type CreateRepoRequestDto struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-func (c CreateRepoRequestDto) ToCreateRepoRequest() CreateRepoRequest {
-	return CreateRepoRequest{
-		Name:        c.Name,
-		Description: c.Description,
-		Private:     false,
-	}
-}
