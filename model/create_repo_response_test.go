@@ -7,6 +7,19 @@ import (
 	"testing"
 )
 
+func TestCreateRepoResponseDto(t *testing.T) {
+	req := CreateRepoResponse{
+		ID:   0,
+		Name: "name",
+	}
+
+	result := req.CreateRepoResponseDto()
+
+	assert.NotNil(t, result)
+	assert.EqualValues(t, req.ID, result.ID)
+	assert.EqualValues(t, req.Name, result.Name)
+}
+
 func TestNewCreateRepoResponseFromBytesFailed(t *testing.T) {
 	var body []byte
 

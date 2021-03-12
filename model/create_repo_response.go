@@ -23,6 +23,14 @@ type Permissions struct {
 	Pull  bool `json:"pull"`
 }
 
+func (c CreateRepoResponse) CreateRepoResponseDto() *CreateRepoResponseDto {
+	return &CreateRepoResponseDto{
+		ID:   c.ID,
+		Name: c.Name,
+		//Handle Owner
+	}
+}
+
 func NewCreateRepoResponseFromBytes(body []byte) (*CreateRepoResponse, *ErrorResponse) {
 	var result CreateRepoResponse
 
