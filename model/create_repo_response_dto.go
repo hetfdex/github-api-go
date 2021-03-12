@@ -8,4 +8,5 @@ type CreateRepoResponseDto struct {
 
 type CreateReposResponseDto struct {
 	Responses []CreateRepoResponseDto `json:"responses"`
+	Error     ErrorResponseDto        `json:"error"`
 }
