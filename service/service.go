@@ -20,12 +20,14 @@ func (s *service) CreateRepo(req model.CreateRepoRequestDto) (*model.CreateRepoR
 	}
 	result := req.CreateRepoRequest()
 
-	_, err := s.RepoCreator.CreateRepo(result, config.GetGitHubTokenValue())
+	res, err := s.RepoCreator.CreateRepo(result, config.GetGitHubTokenValue())
 
 	if err != nil {
 		dtoErr := err.ErrorResponseDto()
 
 		return nil, dtoErr
 	}
-	return nil, nil
+	resDto := res.CreateRepoResponseDto()
+
+	return resDto, nil
 }
