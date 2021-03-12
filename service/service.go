@@ -30,8 +30,20 @@ func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRe
 	return resDto, nil
 }
 
-func (s *service) CreateRepos(model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
+func (s *service) CreateRepos(reqs model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
+	c := make(chan *model.CreateReposResponseDto)
+
+	for _, repo := range reqs.Requests {
+		go createRepoConcurrent(repo, c)
+	}
 	return nil, nil
+}
+
+func createRepoConcurrent(req model.CreateRepoRequestDto, ch chan *model.CreateReposResponseDto) {
+	if !isValidName(req.Name) {
+		ch <- nil
+	}
+	//ch <-
 }
 
 func isValidName(name string) bool {
