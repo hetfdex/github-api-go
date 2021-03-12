@@ -5,3 +5,7 @@ type CreateRepoResponseDto struct {
 	Name  string `json:"name"`
 	Owner string `json:"owner"`
 }
+
+type CreateReposResponseDto struct {
+	Responses []CreateRepoResponseDto `json:"responses"`
+}

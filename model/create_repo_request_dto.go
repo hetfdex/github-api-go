@@ -5,6 +5,10 @@ type CreateRepoRequestDto struct {
 	Description string `json:"description"`
 }
 
+type CreateReposRequestDto struct {
+	Requests []CreateRepoRequestDto `json:"requests"`
+}
+
 func (c CreateRepoRequestDto) CreateRepoRequest() CreateRepoRequest {
 	return CreateRepoRequest{
 		Name:        c.Name,
