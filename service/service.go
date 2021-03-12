@@ -13,9 +13,7 @@ var Service RepoCreator = &service{
 }
 
 func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto) {
-	reqDto.Name = strings.TrimSpace(reqDto.Name)
-
-	if reqDto.Name == "" {
+	if !isValidName(reqDto.Name) {
 		return nil, model.NewBadRequestErrorDto(util.InvalidRepoNameError)
 	}
 	req := reqDto.CreateRepoRequest()
@@ -30,4 +28,17 @@ func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRe
 	resDto := res.CreateRepoResponseDto()
 
 	return resDto, nil
+}
+
+func (s *service) CreateRepos(model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
+	return nil, nil
+}
+
+func isValidName(name string) bool {
+	name = strings.TrimSpace(name)
+
+	if name == "" {
+		return false
+	}
+	return true
 }

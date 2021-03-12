@@ -7,6 +7,7 @@ import (
 
 type RepoCreator interface {
 	CreateRepo(model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto)
+	CreateRepos(model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto)
 }
 
 type service struct {
