@@ -1,14 +1,15 @@
-package app
+package router
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/hetfdex/github-api-go/controller"
 )
 
-type Starter interface {
-	Start()
+type Setuper interface {
+	Setup() *gin.Engine
 }
 
-type app struct {
+type router struct {
 	controller.RepoCreator
 	controller.HealthChecker
 }
