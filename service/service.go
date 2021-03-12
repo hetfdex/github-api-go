@@ -12,20 +12,20 @@ var Service RepoCreator = &service{
 	provider.Provider,
 }
 
-func (s *service) CreateRepo(req model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto) {
-	req.Name = strings.TrimSpace(req.Name)
+func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto) {
+	reqDto.Name = strings.TrimSpace(reqDto.Name)
 
-	if req.Name == "" {
+	if reqDto.Name == "" {
 		return nil, model.NewBadRequestDtoError(util.InvalidRepoNameError)
 	}
-	result := req.CreateRepoRequest()
+	req := reqDto.CreateRepoRequest()
 
-	res, err := s.RepoCreator.CreateRepo(result, config.GetGitHubTokenValue())
+	res, err := s.RepoCreator.CreateRepo(req, config.GetGitHubTokenValue())
 
 	if err != nil {
-		dtoErr := err.ErrorResponseDto()
+		errDto := err.ErrorResponseDto()
 
-		return nil, dtoErr
+		return nil, errDto
 	}
 	resDto := res.CreateRepoResponseDto()
 
