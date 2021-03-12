@@ -1,11 +1,10 @@
 package config
 
-import "os"
-
-const gitHubTokenKey = "SECRET_GITHUB_TOKEN"
-
-var gitHubTokenValue = os.Getenv(gitHubTokenKey)
+import (
+	"github.com/hetfdex/github-api-go/util"
+	"os"
+)
 
 func GetGitHubTokenValue() string {
-	return gitHubTokenValue
+	return os.Getenv(util.GitHubTokenKey)
 }

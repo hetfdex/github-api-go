@@ -1,5 +1,7 @@
 package util
 
+const GitHubTokenKey = "SECRET_GITHUB_TOKEN"
+
 const AuthorizationHeaderKey = "Authorization"
 
 const AuthorizationHeaderValue = "token %s"
