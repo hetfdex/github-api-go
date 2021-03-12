@@ -12,14 +12,6 @@ import (
 	"net/http"
 )
 
-type RepoCreator interface {
-	CreateRepo(model.CreateRepoRequest, string) (*model.CreateRepoResponse, *model.ErrorResponse)
-}
-
-type provider struct {
-	client.Poster
-}
-
 var Provider RepoCreator = &provider{
 	client.PostClient,
 }
@@ -47,7 +39,6 @@ func makeHeader(token string) http.Header {
 }
 
 func makeBody(req model.CreateRepoRequest) *bytes.Reader {
-	//Error ignored because it's extremely unlikely to occur
 	jsonBytes, _ := json.Marshal(req)
 
 	return bytes.NewReader(jsonBytes)
@@ -66,7 +57,6 @@ func handleResponse(statusCode int, body io.ReadCloser) (*model.CreateRepoRespon
 		return nil, handleResponseNotOk(statusCode, bodyBytes)
 	}
 	return handleResponseOk(bodyBytes)
-
 }
 
 func handleResponseNotOk(statusCode int, bytes []byte) *model.ErrorResponse {
@@ -74,10 +64,10 @@ func handleResponseNotOk(statusCode int, bytes []byte) *model.ErrorResponse {
 }
 
 func handleResponseOk(bytes []byte) (*model.CreateRepoResponse, *model.ErrorResponse) {
-	createRepoResponse, err := model.NewCreateRepoResponseFromBytes(bytes)
+	res, err := model.NewCreateRepoResponseFromBytes(bytes)
 
 	if err != nil {
 		return nil, err
 	}
-	return createRepoResponse, nil
+	return res, nil
 }

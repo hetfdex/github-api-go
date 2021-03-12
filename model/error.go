@@ -37,7 +37,7 @@ func NewErrorFromBytes(statusCode int, body []byte) *ErrorResponse {
 	err := json.Unmarshal(body, &result)
 
 	if err != nil {
-		return newError(http.StatusInternalServerError, err.Error())
+		return NewInternalServerError(err.Error())
 	}
 	result.StatusCode = statusCode
 
