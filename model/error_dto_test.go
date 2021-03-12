@@ -10,7 +10,7 @@ func TestNewInternalServerDtoError(t *testing.T) {
 	statusCode := http.StatusInternalServerError
 	message := "NewInternalServerError"
 
-	err := NewInternalServerDtoError(message)
+	err := NewInternalServerErrorDto(message)
 
 	assert.NotNil(t, err)
 	assert.EqualValues(t, statusCode, err.StatusCode)
@@ -21,7 +21,7 @@ func TestNewBadRequestDtoError(t *testing.T) {
 	statusCode := http.StatusBadRequest
 	message := "NewBadRequestError"
 
-	err := NewBadRequestDtoError(message)
+	err := NewBadRequestErrorDto(message)
 
 	assert.NotNil(t, err)
 	assert.EqualValues(t, statusCode, err.StatusCode)

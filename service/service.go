@@ -16,7 +16,7 @@ func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRe
 	reqDto.Name = strings.TrimSpace(reqDto.Name)
 
 	if reqDto.Name == "" {
-		return nil, model.NewBadRequestDtoError(util.InvalidRepoNameError)
+		return nil, model.NewBadRequestErrorDto(util.InvalidRepoNameError)
 	}
 	req := reqDto.CreateRepoRequest()
 

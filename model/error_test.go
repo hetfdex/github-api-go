@@ -43,7 +43,7 @@ func TestNewErrorFromBytesOk(t *testing.T) {
 	statusCode := http.StatusFailedDependency
 	message := "test_message"
 
-	testError := newDtoError(statusCode, message)
+	testError := newErrorDto(statusCode, message)
 
 	body, _ := json.Marshal(testError)
 

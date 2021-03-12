@@ -18,7 +18,7 @@ func (c *controller) CreateRepo(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&req)
 
 	if err != nil {
-		er := model.NewBadRequestDtoError(util.InvalidJsonBodyError)
+		er := model.NewBadRequestErrorDto(util.InvalidJsonBodyError)
 
 		ctx.JSON(er.StatusCode, er)
 

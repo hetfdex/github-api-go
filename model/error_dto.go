@@ -10,15 +10,15 @@ type ErrorResponseDto struct {
 	Error      string `json:"error,omitempty"`
 }
 
-func NewInternalServerDtoError(message string) *ErrorResponseDto {
-	return newDtoError(http.StatusInternalServerError, message)
+func NewInternalServerErrorDto(message string) *ErrorResponseDto {
+	return newErrorDto(http.StatusInternalServerError, message)
 }
 
-func NewBadRequestDtoError(message string) *ErrorResponseDto {
-	return newDtoError(http.StatusBadRequest, message)
+func NewBadRequestErrorDto(message string) *ErrorResponseDto {
+	return newErrorDto(http.StatusBadRequest, message)
 }
 
-func newDtoError(statusCode int, message string) *ErrorResponseDto {
+func newErrorDto(statusCode int, message string) *ErrorResponseDto {
 	return &ErrorResponseDto{
 		StatusCode: statusCode,
 		Message:    message,

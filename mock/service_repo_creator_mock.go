@@ -12,7 +12,7 @@ type ServiceRepoCreatorMock struct {
 
 func (*ServiceRepoCreatorMock) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto) {
 	if reqDto.Name == ControllerCreateRepoError {
-		return nil, model.NewInternalServerDtoError(ControllerCreateRepoError)
+		return nil, model.NewInternalServerErrorDto(ControllerCreateRepoError)
 	}
 	return &model.CreateRepoResponseDto{
 		ID:    0,
