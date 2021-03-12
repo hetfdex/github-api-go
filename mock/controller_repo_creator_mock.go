@@ -5,14 +5,10 @@ import (
 	"net/http"
 )
 
-const createRepoCreated = "createRepoCreated"
-
 type ControllerRepoCreatorMock struct {
 	CreateRepoFunc func(ctx *gin.Context)
 }
 
 func (*ControllerRepoCreatorMock) CreateRepo(ctx *gin.Context) {
-	ctx.JSON(http.StatusCreated, createRepoCreated)
-
-	return
+	ctx.JSON(http.StatusCreated, http.StatusAccepted)
 }
