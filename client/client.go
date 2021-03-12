@@ -6,17 +6,6 @@ import (
 	"time"
 )
 
-type Doer interface {
-	Do(*http.Request) (*http.Response, error)
-}
-
-type Poster interface {
-	Post(string, http.Header, *bytes.Reader) (*http.Response, error)
-}
-
-type poster struct {
-}
-
 var httpClient Doer = &http.Client{
 	Timeout: time.Second * 10,
 }
