@@ -10,4 +10,5 @@ type Starter interface {
 
 type app struct {
 	controller.RepoCreator
+	controller.HealthChecker
 }

@@ -7,6 +7,7 @@ import (
 
 var App Starter = &app{
 	controller.Controller,
+	controller.Health,
 }
 
 var engine = gin.Default()
