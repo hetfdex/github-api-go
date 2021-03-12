@@ -7,6 +7,7 @@ import (
 
 type RepoCreator interface {
 	CreateRepo(ctx *gin.Context)
+	CreateRepos(ctx *gin.Context)
 }
 
 type HealthChecker interface {

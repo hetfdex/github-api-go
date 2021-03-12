@@ -33,3 +33,25 @@ func (c *controller) CreateRepo(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusCreated, res)
 }
+
+func (c *controller) CreateRepos(ctx *gin.Context) {
+	var req model.CreateReposRequestDto
+
+	err := ctx.ShouldBindJSON(&req)
+
+	if err != nil {
+		er := model.NewBadRequestErrorDto(util.InvalidJsonBodyError)
+
+		ctx.JSON(er.StatusCode, er)
+
+		return
+	}
+	res, er := c.RepoCreator.CreateRepos(req)
+
+	if er != nil {
+		ctx.JSON(er.StatusCode, er)
+
+		return
+	}
+	ctx.JSON(http.StatusCreated, res)
+}
