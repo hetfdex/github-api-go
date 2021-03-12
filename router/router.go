@@ -15,7 +15,8 @@ func (e *router) Setup() *gin.Engine {
 	engine := gin.Default()
 
 	engine.GET(util.HealthCheckPath, e.CheckHealth)
-	engine.POST(util.RepositoriesPath, e.CreateRepo)
+	engine.POST(util.RepositoryPath, e.CreateRepo)
+	engine.POST(util.RepositoriesPath, e.CreateRepos)
 
 	return engine
 }

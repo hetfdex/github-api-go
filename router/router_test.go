@@ -44,7 +44,7 @@ func TestCheckHealth(t *testing.T) {
 func TestCreateRepo(t *testing.T) {
 	rec = httptest.NewRecorder()
 
-	req = httptest.NewRequest(http.MethodPost, util.RepositoriesPath, nil)
+	req = httptest.NewRequest(http.MethodPost, util.RepositoryPath, nil)
 
 	engine.ServeHTTP(rec, req)
 
