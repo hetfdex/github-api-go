@@ -8,7 +8,7 @@ import (
 )
 
 func TestErrorResponseDto(t *testing.T) {
-	err := newError(http.StatusFailedDependency, "message")
+	err := NewInternalServerError("message")
 
 	result := err.ErrorResponseDto()
 

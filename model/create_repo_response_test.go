@@ -11,6 +11,9 @@ func TestCreateRepoResponseDto(t *testing.T) {
 	req := CreateRepoResponse{
 		ID:   0,
 		Name: "name",
+		Owner: Owner{
+			Login: "owner_login",
+		},
 	}
 
 	result := req.CreateRepoResponseDto()
@@ -18,6 +21,7 @@ func TestCreateRepoResponseDto(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.EqualValues(t, req.ID, result.ID)
 	assert.EqualValues(t, req.Name, result.Name)
+	assert.EqualValues(t, req.Owner.Login, result.Owner)
 }
 
 func TestNewCreateRepoResponseFromBytesFailed(t *testing.T) {

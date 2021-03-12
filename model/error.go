@@ -23,7 +23,6 @@ func (e *ErrorResponse) ErrorResponseDto() *ErrorResponseDto {
 	return &ErrorResponseDto{
 		StatusCode: e.StatusCode,
 		Message:    e.Message,
-		//Handle Errors
 	}
 }
 

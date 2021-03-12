@@ -25,9 +25,9 @@ type Permissions struct {
 
 func (c CreateRepoResponse) CreateRepoResponseDto() *CreateRepoResponseDto {
 	return &CreateRepoResponseDto{
-		ID:   c.ID,
-		Name: c.Name,
-		//Handle Owner
+		ID:    c.ID,
+		Name:  c.Name,
+		Owner: c.Owner.Login,
 	}
 }
 
