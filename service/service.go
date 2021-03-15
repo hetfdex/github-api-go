@@ -74,8 +74,8 @@ func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanRe
 	var responses model.CreateReposResponseDto
 
 	for event := range inCh {
-		responses.Responses = append(responses.Responses, *event.Response)
-		responses.Errors = append(responses.Errors, *event.Error)
+		responses.Responses = append(responses.Responses, event.Response)
+		responses.Errors = append(responses.Errors, event.Error)
 
 		wg.Done()
 	}
@@ -87,13 +87,13 @@ func getStatusCode(ress model.CreateReposResponseDto, reqCount int) int {
 	failureCount := 0
 
 	for _, res := range ress.Responses {
-		if res.ID != 0 && res.Name != "" {
+		if res != nil {
 			successCount++
 		}
 	}
 
 	for _, err := range ress.Errors {
-		if err.StatusCode != 0 && err.Message != "" {
+		if err != nil {
 			failureCount++
 		}
 	}
