@@ -6,7 +6,7 @@ type CreateRepoResponseDto struct {
 }
 
 type CreateReposResponseDto struct {
-	StatusCode int                      `json:"status_code"`
-	Responses  []*CreateRepoResponseDto `json:"responses"`
-	Errors     []*ErrorResponseDto      `json:"errors"`
+	StatusCode int                     `json:"status_code"`
+	Responses  []CreateRepoResponseDto `json:"responses"`
+	Errors     []ErrorResponseDto      `json:"errors"`
 }
