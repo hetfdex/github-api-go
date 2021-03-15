@@ -87,6 +87,12 @@ func TestCreateReposError(t *testing.T) {
 	assert.NotNil(t, res.Responses)
 	assert.NotNil(t, res.Errors)
 	assert.EqualValues(t, http.StatusInternalServerError, res.StatusCode)
+	assert.EqualValues(t, len(reqsDto.Requests), len(res.Responses))
+	assert.EqualValues(t, len(reqsDto.Requests), len(res.Errors))
+	assert.Nil(t, res.Responses[0])
+	assert.Nil(t, res.Responses[1])
+	assert.NotNil(t, res.Errors[0])
+	assert.NotNil(t, res.Errors[1])
 }
 
 func TestCreateReposMixed(t *testing.T) {
@@ -113,6 +119,12 @@ func TestCreateReposMixed(t *testing.T) {
 	assert.NotNil(t, res.Responses)
 	assert.NotNil(t, res.Errors)
 	assert.EqualValues(t, http.StatusPartialContent, res.StatusCode)
+	assert.EqualValues(t, len(reqsDto.Requests), len(res.Responses))
+	assert.EqualValues(t, len(reqsDto.Requests), len(res.Errors))
+	assert.Nil(t, res.Responses[0])
+	assert.Nil(t, res.Errors[1])
+	assert.NotNil(t, res.Errors[0])
+	assert.NotNil(t, res.Responses[1])
 }
 
 func TestCreateRepos(t *testing.T) {
@@ -139,4 +151,10 @@ func TestCreateRepos(t *testing.T) {
 	assert.NotNil(t, res.Responses)
 	assert.NotNil(t, res.Errors)
 	assert.EqualValues(t, http.StatusCreated, res.StatusCode)
+	assert.EqualValues(t, len(reqsDto.Requests), len(res.Responses))
+	assert.EqualValues(t, len(reqsDto.Requests), len(res.Errors))
+	assert.Nil(t, res.Errors[0])
+	assert.Nil(t, res.Errors[1])
+	assert.NotNil(t, res.Responses[0])
+	assert.NotNil(t, res.Responses[1])
 }
