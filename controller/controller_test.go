@@ -108,19 +108,24 @@ func TestCreateReposInvalidJsonBodyError(t *testing.T) {
 }
 
 func TestCreateRepos(t *testing.T) {
-	req := model.CreateRepoRequestDto{
-		Name:        mock.ControllerCreateRepoError,
+	reqOne := model.CreateRepoRequestDto{
+		Name:        "one",
 		Description: "description",
 	}
 
-	reqs :=model.CreateReposRequestDto{
+	reqTwo := model.CreateRepoRequestDto{
+		Name:        "two",
+		Description: "description",
+	}
+
+	requestsDto := model.CreateReposRequestDto{
 		Requests: []model.CreateRepoRequestDto{
-			req,
-			req,
+			reqOne,
+			reqTwo,
 		},
 	}
 
-	reqBytes, _ := json.Marshal(reqs)
+	reqBytes, _ := json.Marshal(requestsDto)
 
 	rec = httptest.NewRecorder()
 
@@ -130,11 +135,14 @@ func TestCreateRepos(t *testing.T) {
 
 	Controller.CreateRepos(ctx)
 
-	var resDto model.CreateReposResponseDto
+	var responseDto model.CreateReposResponseDto
 
-	_ = json.Unmarshal(rec.Body.Bytes(), &resDto)
+	_ = json.Unmarshal(rec.Body.Bytes(), &responseDto)
 
 	assert.EqualValues(t, http.StatusCreated, rec.Code)
-	assert.EqualValues(t, http.StatusCreated, resDto.StatusCode)
-	assert.EqualValues(t, req.Name, resDto.Responses[0].Name)
+	assert.EqualValues(t, http.StatusCreated, responseDto.StatusCode)
+	assert.EqualValues(t, 0, responseDto.Responses[0].ID)
+	assert.EqualValues(t, reqOne.Name, responseDto.Responses[0].Name)
+	assert.EqualValues(t, 1, responseDto.Responses[1].ID)
+	assert.EqualValues(t, reqTwo.Name, responseDto.Responses[1].Name)
 }

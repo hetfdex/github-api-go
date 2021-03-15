@@ -10,10 +10,6 @@ import (
 	"testing"
 )
 
-var reqDto model.CreateRepoRequestDto
-var reqDtoConcurrent model.CreateRepoRequestDto
-var reqsDto model.CreateReposRequestDto
-
 func TestMain(m *testing.M) {
 	Service = &service{
 		&mock.ProviderRepoCreatorMock{},
@@ -22,7 +18,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestCreateRepoInvalidRepoName(t *testing.T) {
-	reqDto = model.CreateRepoRequestDto{
+	reqDto := model.CreateRepoRequestDto{
 		Name:        "",
 		Description: "description",
 	}
@@ -36,7 +32,7 @@ func TestCreateRepoInvalidRepoName(t *testing.T) {
 }
 
 func TestCreateRepoError(t *testing.T) {
-	reqDto = model.CreateRepoRequestDto{
+	reqDto := model.CreateRepoRequestDto{
 		Name:        mock.ServiceCreateRepoError,
 		Description: "description",
 	}
@@ -50,7 +46,7 @@ func TestCreateRepoError(t *testing.T) {
 }
 
 func TestCreateRepo(t *testing.T) {
-	reqDto = model.CreateRepoRequestDto{
+	reqDto := model.CreateRepoRequestDto{
 		Name:        "name",
 		Description: "description",
 	}
@@ -59,102 +55,88 @@ func TestCreateRepo(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.NotNil(t, res)
-	assert.EqualValues(t, 0, res.ID)
+	assert.EqualValues(t, 666, res.ID)
 	assert.EqualValues(t, reqDto.Name, res.Name)
 }
 
 func TestCreateReposError(t *testing.T) {
-	reqDto = model.CreateRepoRequestDto{
+	reqDtoOne := model.CreateRepoRequestDto{
 		Name:        mock.ServiceCreateRepoError,
 		Description: "description",
 	}
 
-	reqDtoConcurrent = model.CreateRepoRequestDto{
+	reqDtoTwo := model.CreateRepoRequestDto{
 		Name:        mock.ServiceCreateRepoError,
 		Description: "description",
 	}
 
-	reqsDto = model.CreateReposRequestDto{
+	requestsDto := model.CreateReposRequestDto{
 		Requests: []model.CreateRepoRequestDto{
-			reqDto,
-			reqDtoConcurrent,
+			reqDtoOne,
+			reqDtoTwo,
 		},
 	}
 
-	res := Service.CreateRepos(reqsDto)
+	res := Service.CreateRepos(requestsDto)
 
 	assert.NotNil(t, res)
-	assert.NotNil(t, res.Responses)
+	assert.Nil(t, res.Responses)
 	assert.NotNil(t, res.Errors)
 	assert.EqualValues(t, http.StatusInternalServerError, res.StatusCode)
-	assert.EqualValues(t, len(reqsDto.Requests), len(res.Responses))
-	assert.EqualValues(t, len(reqsDto.Requests), len(res.Errors))
-	assert.Nil(t, res.Responses[0])
-	assert.Nil(t, res.Responses[1])
-	assert.NotNil(t, res.Errors[0])
-	assert.NotNil(t, res.Errors[1])
+	assert.EqualValues(t, len(requestsDto.Requests), len(res.Errors))
 }
 
 func TestCreateReposMixed(t *testing.T) {
-	reqDto = model.CreateRepoRequestDto{
+	reqDtoOne := model.CreateRepoRequestDto{
 		Name:        "name",
 		Description: "description",
 	}
 
-	reqDtoConcurrent = model.CreateRepoRequestDto{
+	reqDtoTwo := model.CreateRepoRequestDto{
 		Name:        mock.ServiceCreateRepoError,
 		Description: "description",
 	}
 
-	reqsDto = model.CreateReposRequestDto{
+	requestsDto := model.CreateReposRequestDto{
 		Requests: []model.CreateRepoRequestDto{
-			reqDto,
-			reqDtoConcurrent,
+			reqDtoOne,
+			reqDtoTwo,
 		},
 	}
 
-	res := Service.CreateRepos(reqsDto)
+	res := Service.CreateRepos(requestsDto)
 
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Responses)
 	assert.NotNil(t, res.Errors)
 	assert.EqualValues(t, http.StatusPartialContent, res.StatusCode)
-	assert.EqualValues(t, len(reqsDto.Requests), len(res.Responses))
-	assert.EqualValues(t, len(reqsDto.Requests), len(res.Errors))
-	assert.Nil(t, res.Responses[0])
-	assert.Nil(t, res.Errors[1])
-	assert.NotNil(t, res.Errors[0])
-	assert.NotNil(t, res.Responses[1])
+	assert.EqualValues(t, 1, len(res.Responses))
+	assert.EqualValues(t, 1, len(res.Errors))
 }
 
 func TestCreateRepos(t *testing.T) {
-	reqDto = model.CreateRepoRequestDto{
+	reqDtoOne := model.CreateRepoRequestDto{
 		Name:        "name",
 		Description: "description",
 	}
 
-	reqDtoConcurrent = model.CreateRepoRequestDto{
+	reqDtoTwo := model.CreateRepoRequestDto{
 		Name:        "name",
 		Description: "description",
 	}
 
-	reqsDto = model.CreateReposRequestDto{
+	requestsDto := model.CreateReposRequestDto{
 		Requests: []model.CreateRepoRequestDto{
-			reqDto,
-			reqDtoConcurrent,
+			reqDtoOne,
+			reqDtoTwo,
 		},
 	}
 
-	res := Service.CreateRepos(reqsDto)
+	res := Service.CreateRepos(requestsDto)
 
 	assert.NotNil(t, res)
+	assert.Nil(t, res.Errors)
 	assert.NotNil(t, res.Responses)
-	assert.NotNil(t, res.Errors)
 	assert.EqualValues(t, http.StatusCreated, res.StatusCode)
-	assert.EqualValues(t, len(reqsDto.Requests), len(res.Responses))
-	assert.EqualValues(t, len(reqsDto.Requests), len(res.Errors))
-	assert.Nil(t, res.Errors[0])
-	assert.Nil(t, res.Errors[1])
-	assert.NotNil(t, res.Responses[0])
-	assert.NotNil(t, res.Responses[1])
+	assert.EqualValues(t, len(requestsDto.Requests), len(res.Responses))
 }

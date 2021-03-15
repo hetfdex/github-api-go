@@ -11,9 +11,6 @@ func TestCreateRepoResponseDto(t *testing.T) {
 	req := CreateRepoResponse{
 		ID:   0,
 		Name: "name",
-		Owner: Owner{
-			Login: "owner_login",
-		},
 	}
 
 	result := req.CreateRepoResponseDto()
@@ -36,20 +33,8 @@ func TestNewCreateRepoResponseFromBytesFailed(t *testing.T) {
 
 func TestNewCreateRepoResponseFromBytesOk(t *testing.T) {
 	testResponse := &CreateRepoResponse{
-		ID:       0,
-		Name:     "name",
-		FullName: "fullName",
-		Owner: Owner{
-			Login:   "login",
-			ID:      1,
-			URL:     "url",
-			HtmlUrl: "htmlUrl",
-		},
-		Permissions: Permissions{
-			Admin: false,
-			Push:  false,
-			Pull:  false,
-		},
+		ID:   0,
+		Name: "name",
 	}
 	body, _ := json.Marshal(testResponse)
 
@@ -59,12 +44,4 @@ func TestNewCreateRepoResponseFromBytesOk(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.EqualValues(t, testResponse.ID, result.ID)
 	assert.EqualValues(t, testResponse.Name, result.Name)
-	assert.EqualValues(t, testResponse.FullName, result.FullName)
-	assert.EqualValues(t, testResponse.Owner.Login, result.Owner.Login)
-	assert.EqualValues(t, testResponse.Owner.ID, result.Owner.ID)
-	assert.EqualValues(t, testResponse.Owner.URL, result.Owner.URL)
-	assert.EqualValues(t, testResponse.Owner.HtmlUrl, result.Owner.HtmlUrl)
-	assert.EqualValues(t, testResponse.Permissions.Admin, result.Permissions.Admin)
-	assert.EqualValues(t, testResponse.Permissions.Push, result.Permissions.Push)
-	assert.EqualValues(t, testResponse.Permissions.Pull, result.Permissions.Pull)
 }

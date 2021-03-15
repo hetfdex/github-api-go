@@ -16,8 +16,6 @@ var engine *gin.Engine
 
 var rec *httptest.ResponseRecorder
 
-var req *http.Request
-
 func TestMain(m *testing.M) {
 	Router = &router{
 		&mock.ControllerRepoCreatorMock{},
@@ -31,7 +29,7 @@ func TestMain(m *testing.M) {
 func TestCheckHealth(t *testing.T) {
 	rec = httptest.NewRecorder()
 
-	req = httptest.NewRequest(http.MethodGet, util.HealthCheckPath, nil)
+	req := httptest.NewRequest(http.MethodGet, util.HealthCheckPath, nil)
 
 	engine.ServeHTTP(rec, req)
 
@@ -44,7 +42,7 @@ func TestCheckHealth(t *testing.T) {
 func TestCreateRepo(t *testing.T) {
 	rec = httptest.NewRecorder()
 
-	req = httptest.NewRequest(http.MethodPost, util.RepositoryPath, nil)
+	req := httptest.NewRequest(http.MethodPost, util.RepositoryPath, nil)
 
 	engine.ServeHTTP(rec, req)
 
@@ -57,7 +55,7 @@ func TestCreateRepo(t *testing.T) {
 func TestCreateRepos(t *testing.T) {
 	rec = httptest.NewRecorder()
 
-	req = httptest.NewRequest(http.MethodPost, util.RepositoriesPath, nil)
+	req := httptest.NewRequest(http.MethodPost, util.RepositoriesPath, nil)
 
 	engine.ServeHTTP(rec, req)
 

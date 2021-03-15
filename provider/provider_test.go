@@ -70,12 +70,4 @@ func TestCreateRepoHandleResponseOk(t *testing.T) {
 	assert.NotNil(t, res)
 	assert.EqualValues(t, 0, res.ID)
 	assert.EqualValues(t, "name", res.Name)
-	assert.EqualValues(t, "full_name", res.FullName)
-	assert.EqualValues(t, 0, res.Owner.ID)
-	assert.EqualValues(t, "login", res.Owner.Login)
-	assert.EqualValues(t, "url", res.Owner.URL)
-	assert.EqualValues(t, "html_url", res.Owner.HtmlUrl)
-	assert.EqualValues(t, true, res.Permissions.Admin)
-	assert.EqualValues(t, true, res.Permissions.Push)
-	assert.EqualValues(t, true, res.Permissions.Pull)
 }
