@@ -15,5 +15,5 @@ func (*ControllerRepoCreatorMock) CreateRepo(ctx *gin.Context) {
 }
 
 func (*ControllerRepoCreatorMock) CreateRepos(ctx *gin.Context) {
-	ctx.JSON(http.StatusCreated, http.StatusAccepted)
+	ctx.JSON(http.StatusCreated, http.StatusNoContent)
 }

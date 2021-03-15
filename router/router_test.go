@@ -53,3 +53,16 @@ func TestCreateRepo(t *testing.T) {
 	assert.EqualValues(t, http.StatusCreated, rec.Code)
 	assert.EqualValues(t, body, rec.Body.String())
 }
+
+func TestCreateRepos(t *testing.T) {
+	rec = httptest.NewRecorder()
+
+	req = httptest.NewRequest(http.MethodPost, util.RepositoriesPath, nil)
+
+	engine.ServeHTTP(rec, req)
+
+	body := strconv.Itoa(http.StatusNoContent)
+
+	assert.EqualValues(t, http.StatusCreated, rec.Code)
+	assert.EqualValues(t, body, rec.Body.String())
+}
