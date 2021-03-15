@@ -5,6 +5,7 @@ import (
 	"github.com/hetfdex/github-api-go/model"
 	"github.com/hetfdex/github-api-go/provider"
 	"github.com/hetfdex/github-api-go/util"
+	"net/http"
 	"strings"
 	"sync"
 )
@@ -33,17 +34,15 @@ func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRe
 	return resDto, nil
 }
 
-func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorsResponseDto) {
+func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) *model.CreateReposResponseDto {
 	var wg sync.WaitGroup
 
 	inCh := make(chan createReposChanResult)
-	outResCh := make(chan model.CreateReposResponseDto)
-	outErrsCh := make(chan model.ErrorsResponseDto)
+	outCh := make(chan model.CreateReposResponseDto)
 
-	defer close(outResCh)
-	defer close(outErrsCh)
+	defer close(outCh)
 
-	go s.handleCreateRepoConcurrentResponse(inCh, outResCh, outErrsCh, &wg)
+	go s.handleCreateRepoConcurrentResponse(inCh, outCh, &wg)
 
 	for _, reqDto := range reqsDto.Requests {
 		wg.Add(1)
@@ -54,10 +53,11 @@ func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) (*model.Creat
 
 	close(inCh)
 
-	responses := <-outResCh
-	errors := <-outErrsCh
+	responses := <-outCh
 
-	return &responses, &errors
+	responses.StatusCode = createReposStatusCode(responses, len(reqsDto.Requests))
+
+	return &responses
 }
 
 func (s *service) createRepoConcurrent(inCh chan createReposChanResult, reqDto model.CreateRepoRequestDto) {
@@ -70,16 +70,40 @@ func (s *service) createRepoConcurrent(inCh chan createReposChanResult, reqDto m
 	inCh <- resChan
 }
 
-func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanResult, outResCh chan model.CreateReposResponseDto, outErrsCh chan model.ErrorsResponseDto, wg *sync.WaitGroup) {
+func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanResult, outCh chan model.CreateReposResponseDto, wg *sync.WaitGroup) {
 	var responses model.CreateReposResponseDto
-	var errors model.ErrorsResponseDto
 
 	for event := range inCh {
 		responses.Responses = append(responses.Responses, *event.Response)
-		errors.Errors = append(errors.Errors, *event.Error)
+		responses.Errors = append(responses.Errors, *event.Error)
 
 		wg.Done()
 	}
-	outResCh <- responses
-	outErrsCh <- errors
+	outCh <- responses
+}
+
+func createReposStatusCode(ress model.CreateReposResponseDto, reqCount int) int {
+	successCount := 0
+	failureCount := 0
+
+	for _, res := range ress.Responses {
+		if res.ID != 0 && res.Name != "" {
+			successCount++
+		}
+	}
+
+	for _, err := range ress.Errors {
+		if err.StatusCode != 0 && err.Message != "" {
+			failureCount++
+		}
+	}
+
+	if successCount == reqCount {
+		return http.StatusCreated
+	}
+
+	if failureCount == reqCount {
+		return http.StatusInternalServerError
+	}
+	return http.StatusPartialContent
 }
