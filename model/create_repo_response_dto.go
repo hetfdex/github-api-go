@@ -10,8 +10,3 @@ type CreateReposResponseDto struct {
 	StatusCode int                     `json:"status_code"`
 	Responses  []CreateRepoResponseDto `json:"responses"`
 }
-
-type CreateReposResponseChan struct {
-	Response CreateRepoResponseDto `json:"response"`
-	Error    ErrorResponseDto      `json:"error"`
-}

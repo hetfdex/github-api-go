@@ -13,3 +13,8 @@ type RepoCreator interface {
 type service struct {
 	provider.RepoCreator
 }
+
+type createReposChanReturn struct {
+	Response *model.CreateRepoResponseDto
+	Error    *model.ErrorResponseDto
+}
