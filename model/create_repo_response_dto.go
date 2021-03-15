@@ -15,10 +15,3 @@ type CreateReposResponseChan struct {
 	Response CreateRepoResponseDto `json:"response"`
 	Error    ErrorResponseDto      `json:"error"`
 }
-
-func NewCreateReposResponseChan(res CreateRepoResponse, err ErrorResponse) *CreateReposResponseChan {
-	return &CreateReposResponseChan{
-		Response: *res.CreateRepoResponseDto(),
-		Error:    *err.ErrorResponseDto(),
-	}
-}
