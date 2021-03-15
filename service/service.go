@@ -55,7 +55,7 @@ func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) *model.Create
 
 	responses := <-outCh
 
-	responses.StatusCode = createReposStatusCode(responses, len(reqsDto.Requests))
+	responses.StatusCode = getStatusCode(responses, len(reqsDto.Requests))
 
 	return &responses
 }
@@ -82,7 +82,7 @@ func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanRe
 	outCh <- responses
 }
 
-func createReposStatusCode(ress model.CreateReposResponseDto, reqCount int) int {
+func getStatusCode(ress model.CreateReposResponseDto, reqCount int) int {
 	successCount := 0
 	failureCount := 0
 

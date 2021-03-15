@@ -46,12 +46,7 @@ func (c *controller) CreateRepos(ctx *gin.Context) {
 
 		return
 	}
-	res, er := c.RepoCreator.CreateRepos(req)
+	res := c.RepoCreator.CreateRepos(req)
 
-	if er != nil {
-		ctx.JSON(er.StatusCode, er)
-
-		return
-	}
-	ctx.JSON(http.StatusCreated, res)
+	ctx.JSON(res.StatusCode, res)
 }
