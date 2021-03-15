@@ -35,9 +35,9 @@ func (c *controller) CreateRepo(ctx *gin.Context) {
 }
 
 func (c *controller) CreateRepos(ctx *gin.Context) {
-	var req model.CreateReposRequestDto
+	var requestsDto model.CreateReposRequestDto
 
-	err := ctx.ShouldBindJSON(&req)
+	err := ctx.ShouldBindJSON(&requestsDto)
 
 	if err != nil {
 		er := model.NewBadRequestErrorDto(util.InvalidJsonBodyError)
@@ -46,7 +46,7 @@ func (c *controller) CreateRepos(ctx *gin.Context) {
 
 		return
 	}
-	res := c.RepoCreator.CreateRepos(req)
+	res := c.RepoCreator.CreateRepos(requestsDto)
 
 	ctx.JSON(res.StatusCode, res)
 }

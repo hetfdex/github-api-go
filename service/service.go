@@ -34,7 +34,7 @@ func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRe
 	return resDto, nil
 }
 
-func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) *model.CreateReposResponseDto {
+func (s *service) CreateRepos(requestsDto model.CreateReposRequestDto) *model.CreateReposResponseDto {
 	var wg sync.WaitGroup
 
 	inCh := make(chan createReposChanResult)
@@ -44,7 +44,7 @@ func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) *model.Create
 
 	go s.handleCreateRepoConcurrentResponse(inCh, outCh, &wg)
 
-	for _, reqDto := range reqsDto.Requests {
+	for _, reqDto := range requestsDto.Requests {
 		wg.Add(1)
 
 		go s.createRepoConcurrent(inCh, reqDto)
@@ -53,11 +53,11 @@ func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) *model.Create
 
 	close(inCh)
 
-	responses := <-outCh
+	responsesDto := <-outCh
 
-	responses.StatusCode = getStatusCode(responses, len(reqsDto.Requests))
+	responsesDto.StatusCode = getStatusCode(responsesDto, len(requestsDto.Requests))
 
-	return &responses
+	return &responsesDto
 }
 
 func (s *service) createRepoConcurrent(inCh chan createReposChanResult, reqDto model.CreateRepoRequestDto) {
@@ -71,29 +71,33 @@ func (s *service) createRepoConcurrent(inCh chan createReposChanResult, reqDto m
 }
 
 func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanResult, outCh chan model.CreateReposResponseDto, wg *sync.WaitGroup) {
-	var responses model.CreateReposResponseDto
+	var responsesDto model.CreateReposResponseDto
 
 	for event := range inCh {
-		responses.Responses = append(responses.Responses, event.Response)
-		responses.Errors = append(responses.Errors, event.Error)
+		if event.Response != nil {
+			responsesDto.Responses = append(responsesDto.Responses, *event.Response)
+		}
 
+		if event.Error != nil {
+			responsesDto.Errors = append(responsesDto.Errors, *event.Error)
+		}
 		wg.Done()
 	}
-	outCh <- responses
+	outCh <- responsesDto
 }
 
-func getStatusCode(ress model.CreateReposResponseDto, reqCount int) int {
+func getStatusCode(responsesDto model.CreateReposResponseDto, reqCount int) int {
 	successCount := 0
 	failureCount := 0
 
-	for _, res := range ress.Responses {
-		if res != nil {
+	for _, resDto := range responsesDto.Responses {
+		if resDto.ID != 0 && resDto.Name != "" {
 			successCount++
 		}
 	}
 
-	for _, err := range ress.Errors {
-		if err != nil {
+	for _, errDto := range responsesDto.Errors {
+		if errDto.StatusCode != 0 && errDto.Message != "" {
 			failureCount++
 		}
 	}
