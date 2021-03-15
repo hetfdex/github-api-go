@@ -22,14 +22,18 @@ func (*ServiceRepoCreatorMock) CreateRepo(reqDto model.CreateRepoRequestDto) (*m
 	}, nil
 }
 
-func (*ServiceRepoCreatorMock) CreateRepos(reqsDto model.CreateReposRequestDto) *model.CreateReposResponseDto {
-	return &model.CreateReposResponseDto{
-		StatusCode: http.StatusCreated,
-		Responses: []*model.CreateRepoResponseDto{
-			{
-				ID:   0,
-				Name: reqsDto.Requests[0].Name,
-			},
-		},
+func (*ServiceRepoCreatorMock) CreateRepos(requestsDto model.CreateReposRequestDto) *model.CreateReposResponseDto {
+	var responsesDto model.CreateReposResponseDto
+
+	for i, req := range requestsDto.Requests {
+		res := model.CreateRepoResponseDto{
+			ID:   i,
+			Name: req.Name,
+		}
+
+		responsesDto.Responses = append(responsesDto.Responses, res)
 	}
+	responsesDto.StatusCode = http.StatusCreated
+
+	return &responsesDto
 }

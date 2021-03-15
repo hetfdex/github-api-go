@@ -15,19 +15,7 @@ func (*ProviderRepoCreatorMock) CreateRepo(req model.CreateRepoRequest, _ string
 		return nil, model.NewInternalServerError(ServiceCreateRepoError)
 	}
 	return &model.CreateRepoResponse{
-		ID:       0,
-		Name:     "name",
-		FullName: "fullName",
-		Owner: model.Owner{
-			Login:   "owner_login",
-			ID:      0,
-			URL:     "url",
-			HtmlUrl: "htmlUrl",
-		},
-		Permissions: model.Permissions{
-			Admin: false,
-			Push:  false,
-			Pull:  false,
-		},
+		ID:   666,
+		Name: req.Name,
 	}, nil
 }
