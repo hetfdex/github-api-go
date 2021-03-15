@@ -22,6 +22,6 @@ func (*ServiceRepoCreatorMock) CreateRepo(reqDto model.CreateRepoRequestDto) (*m
 	}, nil
 }
 
-func (*ServiceRepoCreatorMock) CreateRepos(reqDto model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
+func (*ServiceRepoCreatorMock) CreateRepos(model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
 	return nil, nil
 }
