@@ -7,6 +7,5 @@ type CreateRepoResponseDto struct {
 }
 
 type CreateReposResponseDto struct {
-	StatusCode int                     `json:"status_code"`
-	Responses  []CreateRepoResponseDto `json:"responses"`
+	Responses []CreateRepoResponseDto `json:"responses"`
 }
