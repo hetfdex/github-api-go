@@ -2,6 +2,7 @@ package mock
 
 import (
 	"github.com/hetfdex/github-api-go/model"
+	"net/http"
 )
 
 const ControllerCreateRepoError = "controllerCreateRepoError"
@@ -17,10 +18,18 @@ func (*ServiceRepoCreatorMock) CreateRepo(reqDto model.CreateRepoRequestDto) (*m
 	}
 	return &model.CreateRepoResponseDto{
 		ID:   0,
-		Name: "name",
+		Name: reqDto.Name,
 	}, nil
 }
 
-func (*ServiceRepoCreatorMock) CreateRepos(model.CreateReposRequestDto) *model.CreateReposResponseDto {
-	return nil
+func (*ServiceRepoCreatorMock) CreateRepos(reqsDto model.CreateReposRequestDto) *model.CreateReposResponseDto {
+	return &model.CreateReposResponseDto{
+		StatusCode: http.StatusCreated,
+		Responses: []*model.CreateRepoResponseDto{
+			{
+				ID:   0,
+				Name: reqsDto.Requests[0].Name,
+			},
+		},
+	}
 }

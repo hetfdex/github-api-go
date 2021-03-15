@@ -90,3 +90,51 @@ func TestCreateRepo(t *testing.T) {
 	assert.EqualValues(t, 0, resDto.ID)
 	assert.EqualValues(t, req.Name, resDto.Name)
 }
+
+func TestCreateReposInvalidJsonBodyError(t *testing.T) {
+	rec = httptest.NewRecorder()
+
+	ctx, _ = gin.CreateTestContext(rec)
+
+	Controller.CreateRepos(ctx)
+
+	var errDto model.ErrorResponseDto
+
+	_ = json.Unmarshal(rec.Body.Bytes(), &errDto)
+
+	assert.EqualValues(t, http.StatusBadRequest, rec.Code)
+	assert.EqualValues(t, http.StatusBadRequest, errDto.StatusCode)
+	assert.EqualValues(t, util.InvalidJsonBodyError, errDto.Message)
+}
+
+func TestCreateRepos(t *testing.T) {
+	req := model.CreateRepoRequestDto{
+		Name:        mock.ControllerCreateRepoError,
+		Description: "description",
+	}
+
+	reqs :=model.CreateReposRequestDto{
+		Requests: []model.CreateRepoRequestDto{
+			req,
+			req,
+		},
+	}
+
+	reqBytes, _ := json.Marshal(reqs)
+
+	rec = httptest.NewRecorder()
+
+	ctx, _ = gin.CreateTestContext(rec)
+
+	ctx.Request, _ = http.NewRequest(http.MethodPost, "/", bytes.NewBuffer(reqBytes))
+
+	Controller.CreateRepos(ctx)
+
+	var resDto model.CreateReposResponseDto
+
+	_ = json.Unmarshal(rec.Body.Bytes(), &resDto)
+
+	assert.EqualValues(t, http.StatusCreated, rec.Code)
+	assert.EqualValues(t, http.StatusCreated, resDto.StatusCode)
+	assert.EqualValues(t, req.Name, resDto.Responses[0].Name)
+}
