@@ -9,8 +9,8 @@ type CreateReposRequestDto struct {
 	Requests []CreateRepoRequestDto `json:"requests"`
 }
 
-func (c CreateRepoRequestDto) CreateRepoRequest() CreateRepoRequest {
-	return CreateRepoRequest{
+func (c CreateRepoRequestDto) CreateRepoRequest() *CreateRepoRequest {
+	return &CreateRepoRequest{
 		Name:        c.Name,
 		Description: c.Description,
 		Private:     false,
