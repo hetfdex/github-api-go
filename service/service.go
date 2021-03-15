@@ -33,15 +33,17 @@ func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRe
 	return resDto, nil
 }
 
-func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
+func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorsResponseDto) {
 	var wg sync.WaitGroup
 
-	inCh := make(chan createReposChanReturn)
-	outCh := make(chan model.CreateReposResponseDto)
+	inCh := make(chan createReposChanResult)
+	outResCh := make(chan model.CreateReposResponseDto)
+	outErrsCh := make(chan model.ErrorsResponseDto)
 
-	defer close(outCh)
+	defer close(outResCh)
+	defer close(outErrsCh)
 
-	go s.handleCreateRepoConcurrentResponse(inCh, outCh, &wg)
+	go s.handleCreateRepoConcurrentResponse(inCh, outResCh, outErrsCh, &wg)
 
 	for _, reqDto := range reqsDto.Requests {
 		wg.Add(1)
@@ -52,28 +54,32 @@ func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) (*model.Creat
 
 	close(inCh)
 
-	responses := <-outCh
+	responses := <-outResCh
+	errors := <-outErrsCh
 
-	return &responses, nil
+	return &responses, &errors
 }
 
-func (s *service) createRepoConcurrent(inCh chan createReposChanReturn, reqDto model.CreateRepoRequestDto) {
+func (s *service) createRepoConcurrent(inCh chan createReposChanResult, reqDto model.CreateRepoRequestDto) {
 	res, err := s.CreateRepo(reqDto)
 
-	resChan := createReposChanReturn{
+	resChan := createReposChanResult{
 		Response: res,
 		Error:    err,
 	}
 	inCh <- resChan
 }
 
-func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanReturn, outCh chan model.CreateReposResponseDto, wg *sync.WaitGroup) {
+func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanResult, outResCh chan model.CreateReposResponseDto, outErrsCh chan model.ErrorsResponseDto, wg *sync.WaitGroup) {
 	var responses model.CreateReposResponseDto
+	var errors model.ErrorsResponseDto
 
-	for response := range inCh {
-		responses.Responses = append(responses.Responses, *response.Response)
+	for event := range inCh {
+		responses.Responses = append(responses.Responses, *event.Response)
+		errors.Errors = append(errors.Errors, *event.Error)
 
 		wg.Done()
 	}
-	outCh <- responses
+	outResCh <- responses
+	outErrsCh <- errors
 }
