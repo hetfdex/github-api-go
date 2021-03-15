@@ -7,14 +7,14 @@ import (
 
 type RepoCreator interface {
 	CreateRepo(model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto)
-	CreateRepos(model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto)
+	CreateRepos(model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorsResponseDto)
 }
 
 type service struct {
 	provider.RepoCreator
 }
 
-type createReposChanReturn struct {
+type createReposChanResult struct {
 	Response *model.CreateRepoResponseDto
 	Error    *model.ErrorResponseDto
 }
