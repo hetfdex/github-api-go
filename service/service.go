@@ -13,12 +13,14 @@ var Service RepoCreator = &service{
 }
 
 func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto) {
-	if !isValidName(reqDto.Name) {
+	name := strings.TrimSpace(reqDto.Name)
+
+	if name == "" {
 		return nil, model.NewBadRequestErrorDto(util.InvalidRepoNameError)
 	}
 	req := reqDto.CreateRepoRequest()
 
-	res, err := s.RepoCreator.CreateRepo(req, config.GetGitHubTokenValue())
+	res, err := s.RepoCreator.CreateRepo(*req, config.GetGitHubTokenValue())
 
 	if err != nil {
 		errDto := err.ErrorResponseDto()
@@ -30,27 +32,35 @@ func (s *service) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRe
 	return resDto, nil
 }
 
-func (s *service) CreateRepos(reqs model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
-	c := make(chan *model.CreateReposResponseDto)
+func (s *service) CreateRepos(reqsDto model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
+	inCh := make(chan createReposChanReturn)
+	outCh := make(chan model.CreateReposResponseDto)
 
-	for _, repo := range reqs.Requests {
-		go createRepoConcurrent(repo, c)
+	go s.handleCreateRepoConcurrentResponse(inCh, outCh)
+
+	for _, reqDto := range reqsDto.Requests {
+		go s.createRepoConcurrent(inCh, reqDto)
 	}
-	return nil, nil
+	responses := <-outCh
+
+	return &responses, nil
 }
 
-func createRepoConcurrent(req model.CreateRepoRequestDto, ch chan *model.CreateReposResponseDto) {
-	if !isValidName(req.Name) {
-		ch <- nil
+func (s *service) createRepoConcurrent(inCh chan createReposChanReturn, reqDto model.CreateRepoRequestDto) {
+	res, err := s.CreateRepo(reqDto)
+
+	resChan := createReposChanReturn{
+		Response: res,
+		Error:    err,
 	}
-	//ch <-
+	inCh <- resChan
 }
 
-func isValidName(name string) bool {
-	name = strings.TrimSpace(name)
+func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanReturn, outCh chan model.CreateReposResponseDto) {
+	var responses model.CreateReposResponseDto
 
-	if name == "" {
-		return false
+	for response := range inCh {
+		responses.Responses = append(responses.Responses, *response.Response)
 	}
-	return true
+	outCh <- responses
 }
