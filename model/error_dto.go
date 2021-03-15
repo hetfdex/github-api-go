@@ -7,11 +7,6 @@ import (
 type ErrorResponseDto struct {
 	StatusCode int    `json:"status_code"`
 	Message    string `json:"message"`
-	Error      string `json:"error,omitempty"`
-}
-
-type ErrorsResponseDto struct {
-	Errors []ErrorResponseDto `json:"errors"`
 }
 
 func NewInternalServerErrorDto(message string) *ErrorResponseDto {

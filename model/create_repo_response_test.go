@@ -21,7 +21,6 @@ func TestCreateRepoResponseDto(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.EqualValues(t, req.ID, result.ID)
 	assert.EqualValues(t, req.Name, result.Name)
-	assert.EqualValues(t, req.Owner.Login, result.Owner)
 }
 
 func TestNewCreateRepoResponseFromBytesFailed(t *testing.T) {
