@@ -59,5 +59,4 @@ func TestCreateRepo(t *testing.T) {
 	assert.NotNil(t, res)
 	assert.EqualValues(t, 0, res.ID)
 	assert.EqualValues(t, reqDto.Name, res.Name)
-	assert.EqualValues(t, "owner_login", res.Owner)
 }

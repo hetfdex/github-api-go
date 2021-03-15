@@ -89,5 +89,4 @@ func TestCreateRepo(t *testing.T) {
 	assert.EqualValues(t, http.StatusCreated, rec.Code)
 	assert.EqualValues(t, 0, resDto.ID)
 	assert.EqualValues(t, req.Name, resDto.Name)
-	assert.EqualValues(t, "owner", resDto.Owner)
 }

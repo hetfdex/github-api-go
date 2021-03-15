@@ -8,7 +8,7 @@ const ControllerCreateRepoError = "controllerCreateRepoError"
 
 type ServiceRepoCreatorMock struct {
 	CreateRepoFunc  func(model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto)
-	CreateReposFunc func(model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto)
+	CreateReposFunc func(model.CreateReposRequestDto) *model.CreateReposResponseDto
 }
 
 func (*ServiceRepoCreatorMock) CreateRepo(reqDto model.CreateRepoRequestDto) (*model.CreateRepoResponseDto, *model.ErrorResponseDto) {
@@ -16,12 +16,11 @@ func (*ServiceRepoCreatorMock) CreateRepo(reqDto model.CreateRepoRequestDto) (*m
 		return nil, model.NewInternalServerErrorDto(ControllerCreateRepoError)
 	}
 	return &model.CreateRepoResponseDto{
-		ID:    0,
-		Name:  "name",
-		Owner: "owner",
+		ID:   0,
+		Name: "name",
 	}, nil
 }
 
-func (*ServiceRepoCreatorMock) CreateRepos(model.CreateReposRequestDto) (*model.CreateReposResponseDto, *model.ErrorResponseDto) {
-	return nil, nil
+func (*ServiceRepoCreatorMock) CreateRepos(model.CreateReposRequestDto) *model.CreateReposResponseDto {
+	return nil
 }
