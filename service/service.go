@@ -39,15 +39,18 @@ func (s *service) CreateRepos(requestsDto model.CreateReposRequestDto) *model.Cr
 
 	inCh := make(chan createReposChanResult)
 	outCh := make(chan model.CreateReposResponseDto)
+	buffCh := make(chan int, util.ConcurrencyBuffer)
 
 	defer close(outCh)
 
 	go s.handleCreateRepoConcurrentResponse(inCh, outCh, &wg)
 
-	for _, reqDto := range requestsDto.Requests {
+	for i, reqDto := range requestsDto.Requests {
+		buffCh <- i
+
 		wg.Add(1)
 
-		go s.createRepoConcurrent(inCh, reqDto)
+		go s.createRepoConcurrent(inCh, buffCh, reqDto)
 	}
 	wg.Wait()
 
@@ -60,7 +63,7 @@ func (s *service) CreateRepos(requestsDto model.CreateReposRequestDto) *model.Cr
 	return &responsesDto
 }
 
-func (s *service) createRepoConcurrent(inCh chan createReposChanResult, reqDto model.CreateRepoRequestDto) {
+func (s *service) createRepoConcurrent(inCh chan createReposChanResult, buffCh chan int, reqDto model.CreateRepoRequestDto) {
 	res, err := s.CreateRepo(reqDto)
 
 	resChan := createReposChanResult{
@@ -68,6 +71,8 @@ func (s *service) createRepoConcurrent(inCh chan createReposChanResult, reqDto m
 		Error:    err,
 	}
 	inCh <- resChan
+
+	<-buffCh
 }
 
 func (s *service) handleCreateRepoConcurrentResponse(inCh chan createReposChanResult, outCh chan model.CreateReposResponseDto, wg *sync.WaitGroup) {

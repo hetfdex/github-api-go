@@ -17,3 +17,5 @@ const AuthorizationHeaderValue = "token %s"
 const InvalidRepoNameError = "invalid repository name"
 
 const InvalidJsonBodyError = "invalid json body"
+
+const ConcurrencyBuffer = 5
